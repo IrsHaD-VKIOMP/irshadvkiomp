@@ -550,8 +550,12 @@
         gap: 10px;
       }
       nav {
-        display: none; /* keep header clean on very small screens */
-      }
+    display: flex;          /* show it again */
+    flex-wrap: wrap;        /* allow items to go to 2nd line */
+    gap: 8px;
+    font-size: 0.8rem;
+    justify-content: flex-end;
+  }
       .page {
         padding-inline: 14px;
       }
@@ -942,4 +946,5 @@
 </script>
 </body>
 </html>
+
 
