@@ -550,11 +550,7 @@
         gap: 10px;
       }
       nav {
-    display: flex;          /* show it again */
-    flex-wrap: wrap;        /* allow items to go to 2nd line */
-    gap: 8px;
-    font-size: 0.8rem;
-    justify-content: flex-end;
+        display: none; /* keep header clean on very small screens */
       }
       .page {
         padding-inline: 14px;
@@ -758,7 +754,7 @@
       <section id="contact">
         <div class="section-header">
           <h2 class="section-title">Let’s connect</h2>
-          <p class="section-subtitle">Say hi, share feedback, or send an idea.</p>
+          <p class="section-subtitle">Login or sign up to see my private contact details.</p>
         </div>
         <div class="contact-card">
           <div>
@@ -767,39 +763,60 @@
               If you ever want to connect, collaborate, or just talk about ideas,
               you’re always welcome to reach out.
             </p>
-            <!-- Locked message (shown first) -->
-<div id="contact-locked" class="contact-meta">
-  <span><b>Private:</b> Contact details are hidden.</span>
-  <span>Login to view my email, Instagram and WhatsApp.</span>
-  <button class="primary-btn" type="button" onclick="revealContacts()">
-    Login to view <span class="icon">🔓</span>
-  </button>
-</div>
 
-<!-- Real contact details (hidden by default) -->
-<div id="contact-protected" class="contact-meta" style="display: none;">
-  <span><b>Email:</b> yourrealmail@example.com</span>
-  <span><b>Instagram:</b> @your_real_insta</span>
-  <span><b>WhatsApp:</b> +91-XXXXXXXXXX</span>
-</div>
-
+            <!-- Contact details – visible only when logged in -->
+            <div class="contact-meta" id="protected-contacts" style="display:none; margin-top:10px;">
+              <span><b>Email:</b> yourrealmail@example.com</span>
+              <span><b>Instagram:</b> @your_real_insta</span>
+              <span><b>WhatsApp:</b> +91-XXXXXXXXXX</span>
+              <button class="ghost-btn" type="button" onclick="logoutUser()" style="margin-top:6px;">
+                Logout
+              </button>
+            </div>
           </div>
-          <form class="contact-fields" action="https://formsubmit.co/irshadvkiomp@gmail.com" method="POST">
-  <input class="input" type="text" name="name" placeholder="Your name" required />
-  <input class="input" type="email" name="email" placeholder="Your email" required />
-  <textarea class="input" name="message" rows="3" placeholder="Your message or feedback" required></textarea>
 
-  <!-- optional hidden settings -->
-  <input type="hidden" name="_captcha" value="false">
-  <input type="hidden" name="_subject" value="New message from your website">
-  
+          <!-- Auth area: login / signup -->
+          <div class="contact-fields" id="auth-area">
+            <!-- Tabs -->
+            <div style="display:flex; gap:8px; margin-bottom:8px;">
+              <button type="button" class="ghost-btn" onclick="showAuthMode('login')">Login</button>
+              <button type="button" class="ghost-btn" onclick="showAuthMode('signup')">Sign up</button>
+            </div>
+
+            <!-- Login form -->
+            <form id="login-form" style="display:flex; flex-direction:column; gap:8px;">
+  <input class="input" type="email" id="login-email" placeholder="Email" required />
+  <input class="input" type="password" id="login-password" placeholder="Password" required />
   <button class="primary-btn" type="submit">
-    Send message <span class="icon">📩</span>
+    Login <span class="icon">🔓</span>
+  </button>
+  <button
+    type="button"
+    class="ghost-btn"
+    style="align-self:flex-start; font-size:0.75rem; padding:4px 10px; margin-top:4px;"
+    onclick="resetPassword()"
+  >
+    Forgot password?
   </button>
 </form>
 
+
+            <!-- Signup form -->
+            <form id="signup-form" style="display:none; flex-direction:column; gap:8px;">
+              <input class="input" type="email" id="signup-email" placeholder="Email" required />
+              <input class="input" type="password" id="signup-password" placeholder="Password (min 6 chars)" required />
+              <button class="primary-btn" type="submit">
+                Create account <span class="icon">✨</span>
+              </button>
+            </form>
+
+            <div id="auth-message" style="font-size:0.8rem; color:#9ca3af; margin-top:6px;">
+              Login or sign up to see my contact details.
+            </div>
+          </div>
         </div>
       </section>
+
     </main>
 
     <footer>
@@ -807,35 +824,122 @@
     </footer>
   </div>
 
-  <script>
-  // Year in footer
-  document.getElementById("year").textContent = new Date().getFullYear();
+ <script type="module">
+  // 1) Import Firebase SDK from CDN
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import {
+    getAuth,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged,
+    sendPasswordResetEmail,   // 👈 added for "forgot password"
+  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-  // Very simple password login (front-end only, NOT fully secure)
-  const SECRET_PASSWORD = "irshad123"; // 👈 change this to your own password
+  // 2) Your Firebase config (COPY FROM FIREBASE CONSOLE)
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT_ID.appspot.com",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId: "YOUR_APP_ID",
+  };
 
-  function revealContacts() {
-    const pwd = prompt("Enter password to view my contact details:");
-    if (pwd === SECRET_PASSWORD) {
-      document.getElementById("contact-protected").style.display = "flex";
-      document.getElementById("contact-locked").style.display = "none";
-    } else if (pwd !== null) {
-      alert("Wrong password.");
+  // 3) Init
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  // 4) UI helpers
+  window.showAuthMode = function (mode) {
+    document.getElementById("auth-message").textContent = "";
+    if (mode === "login") {
+      document.getElementById("login-form").style.display = "flex";
+      document.getElementById("signup-form").style.display = "none";
+    } else {
+      document.getElementById("login-form").style.display = "none";
+      document.getElementById("signup-form").style.display = "flex";
     }
+  };
+
+  function setMessage(msg) {
+    document.getElementById("auth-message").textContent = msg;
   }
-</script>
-<script>
-  // Visitor counter using CountAPI (free)
-  fetch("https://api.countapi.xyz/hit/your-website-12345/viewcount")
-    .then(res => res.json())
-    .then(data => {
-      document.getElementById("viewer-count").innerText = data.value;
-    })
-    .catch(() => {
-      document.getElementById("viewer-count").innerText = "N/A";
-    });
+
+  function showContacts(show) {
+    document.getElementById("protected-contacts").style.display = show ? "flex" : "none";
+  }
+
+  // 5) 🔁 Forgot password (this is your "no.3")
+  window.resetPassword = async function () {
+    const emailInput = document.getElementById("login-email");
+    const email = emailInput.value.trim();
+
+    if (!email) {
+      setMessage("Enter your email above first, then tap 'Forgot password'.");
+      emailInput.focus();
+      return;
+    }
+
+    try {
+      await sendPasswordResetEmail(auth, email);
+      setMessage("Password reset link sent to " + email + " ✅");
+    } catch (err) {
+      setMessage("Reset failed: " + err.message);
+    }
+  };
+
+  // 6) Login form
+  const loginForm = document.getElementById("login-form");
+  loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const email = document.getElementById("login-email").value.trim();
+    const password = document.getElementById("login-password").value.trim();
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      setMessage("Logged in ✅");
+    } catch (err) {
+      setMessage("Login failed: " + err.message);
+    }
+  });
+
+  // 7) Signup form
+  const signupForm = document.getElementById("signup-form");
+  signupForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const email = document.getElementById("signup-email").value.trim();
+    const password = document.getElementById("signup-password").value.trim();
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      setMessage("Account created ✅ You are now logged in.");
+    } catch (err) {
+      setMessage("Signup failed: " + err.message);
+    }
+  });
+
+  // 8) Logout
+  window.logoutUser = async function () {
+    await signOut(auth);
+  };
+
+  // 9) React to login state
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      showContacts(true);
+      setMessage("Logged in as " + (user.email || "user"));
+    } else {
+      showContacts(false);
+      setMessage("Login or sign up to see my contact details.");
+    }
+  });
+
+  // 10) Footer year
+  const yearEl = document.getElementById("year");
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+  // 11) Default mode = login tab
+  window.showAuthMode("login");
 </script>
 </body>
 </html>
-
 
