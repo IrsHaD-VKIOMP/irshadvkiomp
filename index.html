@@ -847,27 +847,37 @@
             </div>
 
             <!-- Login form -->
-            <form id="login-form" style="display:flex; flex-direction:column; gap:8px;">
-              <input class="input" type="email" id="login-email" placeholder="Email" required />
-              <div style="position:relative;">
-                <input class="input" type="password" id="login-password" placeholder="Password" required />
-                <span onclick="togglePassword('login-password')"
-                      style="position:absolute; right:10px; top:50%; transform:translateY(-50%); cursor:pointer; font-size:0.9rem; color:#a855f7;">
-                  👁️
-                </span>
-              </div>
-              <button class="primary-btn" type="submit">
-                Login <span class="icon">🔓</span>
-              </button>
-              <button
-                type="button"
-                class="ghost-btn"
-                style="align-self:flex-start; font-size:0.75rem; padding:4px 10px; margin-top:4px;"
-                onclick="resetPassword()"
-              >
-                Forgot password?
-              </button>
-            </form>
+ <form id="login-form" style="display:flex; flex-direction:column; gap:8px;">
+  <input class="input" type="email" id="login-email" placeholder="Email" required />
+  <div style="position:relative;">
+    <input class="input" type="password" id="login-password" placeholder="Password" required />
+    <span onclick="togglePassword('login-password')"
+          style="position:absolute; right:10px; top:50%; transform:translateY(-50%); cursor:pointer; font-size:0.9rem; color:#a855f7;">
+      👁️
+    </span>
+  </div>
+  <button class="primary-btn" type="submit">
+    Login <span class="icon">🔓</span>
+  </button>
+
+  <button
+    type="button"
+    class="ghost-btn"
+    style="align-self:flex-start; font-size:0.75rem; padding:4px 10px; margin-top:4px;"
+    onclick="resetPassword()"
+  >
+    Forgot password?
+  </button>
+
+  <button
+    type="button"
+    class="ghost-btn"
+    style="align-self:flex-start; font-size:0.75rem; padding:4px 10px; margin-top:4px;"
+    onclick="resendVerification()"
+  >
+    Resend verification email
+  </button>
+</form>
 
             <!-- Signup form -->
             <form id="signup-form" style="display:none; flex-direction:column; gap:8px;">
