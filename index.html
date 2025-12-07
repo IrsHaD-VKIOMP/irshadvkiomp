@@ -84,14 +84,6 @@
       gap: 6px;
     }
 
-    .logo-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 999px;
-      background: radial-gradient(circle, #22c55e 0, #16a34a 40%, #052e16 100%);
-      box-shadow: 0 0 14px rgba(34, 197, 94, 0.8);
-    }
-
     nav {
       display: flex;
       gap: 16px;
@@ -335,17 +327,16 @@
     }
 
     .hero-floating-badge {
-  position: relative;
-  margin-top: 12px;
-  font-size: 0.7rem;
-  padding: 8px 10px;
-  border-radius: 18px;
-  background: rgba(15, 23, 42, 0.96);
-  border: 1px solid rgba(248, 250, 252, 0.3);
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.7);
-  max-width: 100%;
-}
-
+      position: relative;
+      margin-top: 12px;
+      font-size: 0.7rem;
+      padding: 8px 10px;
+      border-radius: 18px;
+      background: rgba(15, 23, 42, 0.96);
+      border: 1px solid rgba(248, 250, 252, 0.3);
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.7);
+      max-width: 100%;
+    }
 
     .hero-floating-badge b {
       color: #e5e7eb;
@@ -512,6 +503,42 @@
       box-shadow: 0 0 0 1px rgba(168, 85, 247, 0.7);
     }
 
+    /* Stylish social buttons */
+    .social-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .social-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 14px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      transition: 0.2s;
+      box-shadow: 0 4px 15px rgba(124, 58, 237, 0.45);
+    }
+
+    .social-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 22px rgba(124, 58, 237, 0.6);
+    }
+
+    .social-btn .icon {
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+    }
+
     footer {
       margin-top: 32px;
       font-size: 0.78rem;
@@ -533,20 +560,20 @@
       .hero-card {
         order: -1;
       }
-      .hero-floating-badge {
-    position: relative;
-    top: auto;
-    right: auto;
-    margin-top: 12px;
-    transform: none;
-    display: block;
-    max-width: 100%;
-  }
       .grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
       .contact-card {
         grid-template-columns: minmax(0, 1fr);
+      }
+      .hero-floating-badge {
+        position: relative;
+        top: auto;
+        right: auto;
+        transform: none;
+        margin-top: 12px;
+        display: block;
+        max-width: 100%;
       }
     }
 
@@ -556,12 +583,12 @@
         gap: 10px;
       }
       nav {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    font-size: 0.8rem;
-    justify-content: flex-end;
-  }
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        font-size: 0.8rem;
+        justify-content: flex-end;
+      }
       .page {
         padding-inline: 14px;
       }
@@ -583,9 +610,9 @@
   <div class="page">
     <header>
       <div class="logo">
-  <span id="viewer-count" style="margin-right:6px;">0</span>
-  <span>Visitors</span>
-</div>
+        <span id="viewer-count" style="margin-right:6px;">0</span>
+        <span>Visitors</span>
+      </div>
       <nav>
         <a href="#about">About</a>
         <a href="#skills">Skills</a>
@@ -776,10 +803,36 @@
 
             <!-- Contact details – visible only when logged in -->
             <div class="contact-meta" id="protected-contacts" style="display:none; margin-top:10px;">
-              <span><b>Email:</b> yourrealmail@example.com</span>
-              <span><b>Instagram:</b> @your_real_insta</span>
-              <span><b>WhatsApp:</b> +91-XXXXXXXXXX</span>
-              <button class="ghost-btn" type="button" onclick="logoutUser()" style="margin-top:6px;">
+              <span><b>Connect with me:</b></span>
+
+              <div class="social-buttons">
+                <!-- Email -->
+                <a href="mailto:irshadvkiomp@gmail.com" class="social-btn">
+                  <span class="icon">✉️</span> Email
+                </a>
+
+                <!-- WhatsApp -->
+                <a href="https://wa.me/919847355952?text=hi%20your%20project%20is%20good" target="_blank" class="social-btn">
+                  <span class="icon">📱</span> WhatsApp
+                </a>
+
+                <!-- Instagram -->
+                <a href="https://instagram.com/irshad_vk_omp" target="_blank" class="social-btn">
+                  <span class="icon">📸</span> Instagram
+                </a>
+
+                <!-- Facebook -->
+                <a href="https://www.facebook.com/share/1Cd4HDGszA/" target="_blank" class="social-btn">
+                  <span class="icon">📘</span> Facebook
+                </a>
+
+                <!-- Snapchat -->
+                <a href="https://www.snapchat.com/add/vkiomp?share_id=GLN9OQRWWW0&locale=en-GB" target="_blank" class="social-btn">
+                  <span class="icon">👻</span> Snapchat
+                </a>
+              </div>
+
+              <button class="ghost-btn" type="button" onclick="logoutUser()" style="margin-top:12px; max-width:max-content;">
                 Logout
               </button>
             </div>
@@ -795,26 +848,37 @@
 
             <!-- Login form -->
             <form id="login-form" style="display:flex; flex-direction:column; gap:8px;">
-  <input class="input" type="email" id="login-email" placeholder="Email" required />
-  <input class="input" type="password" id="login-password" placeholder="Password" required />
-  <button class="primary-btn" type="submit">
-    Login <span class="icon">🔓</span>
-  </button>
-  <button
-    type="button"
-    class="ghost-btn"
-    style="align-self:flex-start; font-size:0.75rem; padding:4px 10px; margin-top:4px;"
-    onclick="resetPassword()"
-  >
-    Forgot password?
-  </button>
-</form>
-
+              <input class="input" type="email" id="login-email" placeholder="Email" required />
+              <div style="position:relative;">
+                <input class="input" type="password" id="login-password" placeholder="Password" required />
+                <span onclick="togglePassword('login-password')"
+                      style="position:absolute; right:10px; top:50%; transform:translateY(-50%); cursor:pointer; font-size:0.9rem; color:#a855f7;">
+                  👁️
+                </span>
+              </div>
+              <button class="primary-btn" type="submit">
+                Login <span class="icon">🔓</span>
+              </button>
+              <button
+                type="button"
+                class="ghost-btn"
+                style="align-self:flex-start; font-size:0.75rem; padding:4px 10px; margin-top:4px;"
+                onclick="resetPassword()"
+              >
+                Forgot password?
+              </button>
+            </form>
 
             <!-- Signup form -->
             <form id="signup-form" style="display:none; flex-direction:column; gap:8px;">
               <input class="input" type="email" id="signup-email" placeholder="Email" required />
-              <input class="input" type="password" id="signup-password" placeholder="Password (min 6 chars)" required />
+              <div style="position:relative;">
+                <input class="input" type="password" id="signup-password" placeholder="Password (min 6 chars)" required />
+                <span onclick="togglePassword('signup-password')"
+                      style="position:absolute; right:10px; top:50%; transform:translateY(-50%); cursor:pointer; font-size:0.9rem; color:#a855f7;">
+                  👁️
+                </span>
+              </div>
               <button class="primary-btn" type="submit">
                 Create account <span class="icon">✨</span>
               </button>
@@ -830,125 +894,152 @@
     </main>
 
     <footer>
-      © <span id="year"></span> copyright by google.
+      © <span id="year"></span> Mohammed Irshad VK. All rights reserved.
     </footer>
   </div>
 
- <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import {
-    getAuth,
-    createUserWithEmailAndPassword,
-    signInWithEmailAndPassword,
-    signOut,
-    onAuthStateChanged,
-    sendPasswordResetEmail,
-  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  <!-- Firebase auth, login/signup, verification, reset, show/hide password -->
+  <script type="module">
+    // Firebase imports from CDN
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import {
+      getAuth,
+      createUserWithEmailAndPassword,
+      signInWithEmailAndPassword,
+      signOut,
+      onAuthStateChanged,
+      sendPasswordResetEmail,
+      sendEmailVerification,
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyDr3YpouSddKSR-9PqKPHDSP1qfwNv-VBM",
-    authDomain: "irshad-website.firebaseapp.com",
-    projectId: "irshad-website",
-    storageBucket: "irshad-website.firebasestorage.app",
-    messagingSenderId: "513828028182",
-    appId: "1:513828028182:web:ceca5d1ac390d5ec731a37"
-  };
+    // Your Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyDr3YpouSddKSR-9PqKPHDSP1qfwNv-VBM",
+      authDomain: "irshad-website.firebaseapp.com",
+      projectId: "irshad-website",
+      storageBucket: "irshad-website.firebasestorage.app",
+      messagingSenderId: "513828028182",
+      appId: "1:513828028182:web:ceca5d1ac390d5ec731a37"
+    };
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
+    // Init
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
 
-  // ... (rest of login/signup/reset code from my previous message)
+    // UI helpers
+    window.showAuthMode = function (mode) {
+      document.getElementById("auth-message").textContent = "";
+      if (mode === "login") {
+        document.getElementById("login-form").style.display = "flex";
+        document.getElementById("signup-form").style.display = "none";
+      } else {
+        document.getElementById("login-form").style.display = "none";
+        document.getElementById("signup-form").style.display = "flex";
+      }
+    };
 
-  // 4) UI helpers
-  window.showAuthMode = function (mode) {
-    document.getElementById("auth-message").textContent = "";
-    if (mode === "login") {
-      document.getElementById("login-form").style.display = "flex";
-      document.getElementById("signup-form").style.display = "none";
-    } else {
-      document.getElementById("login-form").style.display = "none";
-      document.getElementById("signup-form").style.display = "flex";
-    }
-  };
-
-  function setMessage(msg) {
-    document.getElementById("auth-message").textContent = msg;
-  }
-
-  function showContacts(show) {
-    document.getElementById("protected-contacts").style.display = show ? "flex" : "none";
-  }
-
-  // 5) 🔁 Forgot password (this is your "no.3")
-  window.resetPassword = async function () {
-    const emailInput = document.getElementById("login-email");
-    const email = emailInput.value.trim();
-
-    if (!email) {
-      setMessage("Enter your email above first, then tap 'Forgot password'.");
-      emailInput.focus();
-      return;
+    function setMessage(msg) {
+      document.getElementById("auth-message").innerHTML = msg;
     }
 
-    try {
-      await sendPasswordResetEmail(auth, email);
-      setMessage("Password reset link sent to " + email + " ✅");
-    } catch (err) {
-      setMessage("Reset failed: " + err.message);
+    function showContacts(show) {
+      document.getElementById("protected-contacts").style.display = show ? "flex" : "none";
     }
-  };
 
-  // 6) Login form
-  const loginForm = document.getElementById("login-form");
-  loginForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const email = document.getElementById("login-email").value.trim();
-    const password = document.getElementById("login-password").value.trim();
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      setMessage("Logged in ✅");
-    } catch (err) {
-      setMessage("Login failed: " + err.message);
-    }
-  });
+    // Show / hide password
+    window.togglePassword = function (id) {
+      const input = document.getElementById(id);
+      input.type = input.type === "password" ? "text" : "password";
+    };
 
-  // 7) Signup form
-  const signupForm = document.getElementById("signup-form");
-  signupForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const email = document.getElementById("signup-email").value.trim();
-    const password = document.getElementById("signup-password").value.trim();
-    try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      setMessage("Account created ✅ You are now logged in.");
-    } catch (err) {
-      setMessage("Signup failed: " + err.message);
-    }
-  });
+    // Forgot password
+    window.resetPassword = async function () {
+      const emailInput = document.getElementById("login-email");
+      const email = emailInput.value.trim();
 
-  // 8) Logout
-  window.logoutUser = async function () {
-    await signOut(auth);
-  };
+      if (!email) {
+        setMessage("Enter your email above first, then tap 'Forgot password'.");
+        emailInput.focus();
+        return;
+      }
 
-  // 9) React to login state
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      showContacts(true);
-      setMessage("Logged in as " + (user.email || "user"));
-    } else {
-      showContacts(false);
-      setMessage("Login or sign up to see my contact details.");
-    }
-  });
+      try {
+        await sendPasswordResetEmail(auth, email);
+        setMessage("Password reset link sent to " + email + " ✅");
+      } catch (err) {
+        setMessage("Reset failed: " + err.message);
+      }
+    };
 
-  // 10) Footer year
-  const yearEl = document.getElementById("year");
-  if (yearEl) yearEl.textContent = new Date().getFullYear();
+    // Login form
+    const loginForm = document.getElementById("login-form");
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("login-email").value.trim();
+      const password = document.getElementById("login-password").value.trim();
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        if (!userCredential.user.emailVerified) {
+          setMessage("Email not verified ❗<br>Check your inbox and verify first.");
+          await signOut(auth);
+          return;
+        }
+        setMessage("Logged in ✅");
+      } catch (err) {
+        setMessage("Login failed: " + err.message);
+      }
+    });
 
-  // 11) Default mode = login tab
-  window.showAuthMode("login");
-</script>
+    // Signup form
+    const signupForm = document.getElementById("signup-form");
+    signupForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("signup-email").value.trim();
+      const password = document.getElementById("signup-password").value.trim();
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        await sendEmailVerification(userCredential.user);
+        setMessage("Account created! Verification email sent 📩<br>Check your inbox to verify.");
+      } catch (err) {
+        setMessage("Signup failed: " + err.message);
+      }
+    });
+
+    // Logout
+    window.logoutUser = async function () {
+      await signOut(auth);
+    };
+
+    // React to auth state
+    onAuthStateChanged(auth, (user) => {
+      if (user && user.emailVerified) {
+        showContacts(true);
+        setMessage("Logged in as " + (user.email || "user"));
+      } else {
+        showContacts(false);
+        setMessage("Login or sign up to see my contact details.");
+      }
+    });
+
+    // Footer year
+    const yearEl = document.getElementById("year");
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+    // Default auth mode
+    window.showAuthMode("login");
+  </script>
+
+  <!-- Visitor counter -->
+  <script>
+    // Visitor counter using CountAPI (free)
+    fetch("https://api.countapi.xyz/hit/irshadvkiomp-visitor-counter/viewcount")
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("viewer-count").innerText = data.value;
+      })
+      .catch(() => {
+        document.getElementById("viewer-count").innerText = "N/A";
+      });
+  </script>
 </body>
 </html>
-
