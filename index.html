@@ -5,6 +5,44 @@
   <title>irshadvkiomp</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
+    #toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  background: #020617;
+  color: #fff;
+  font-size: 0.85rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: 0.3s;
+  z-index: 9999;
+}
+
+#toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+#toast.success { background: #16a34a; }
+#toast.error { background: #dc2626; }
+
+.fade-up {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUp 0.8s ease forwards;
+}
+
+@keyframes fadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
     :root {
       --bg: #050816;
       --bg-alt: #0b1020;
@@ -243,16 +281,30 @@
     }
 
     .hero-avatar {
-      width: 68px;
-      height: 68px;
-      border-radius: 24px;
-      background: radial-gradient(circle at 20% 0, #f9fafb 0, #6b7280 42%, #020617 100%);
-      border: 2px solid rgba(148, 163, 184, 0.9);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2.2rem;
-    }
+  width: 68px;
+  height: 68px;
+  border-radius: 24px;
+  background: radial-gradient(
+    circle at 20% 0,
+    #f9fafb 0,
+    #6b7280 42%,
+    #020617 100%
+  );
+  border: 2px solid rgba(148, 163, 184, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.2rem;
+  overflow: hidden; /* IMPORTANT for image clipping */
+}
+.hero-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 24px;
+}
+
+
 
     .hero-card-header {
       display: flex;
@@ -602,6 +654,63 @@
         padding: 14px 14px 12px;
       }
     }
+    /* Light mode */
+body.light {
+  --bg: #f8fafc;
+  --bg-alt: #eef2ff;
+  --text: #020617;
+  --muted: #475569;
+  --card: rgba(255, 255, 255, 0.95);
+  --accent: #4f46e5;
+  --accent-soft: rgba(79, 70, 229, 0.12);
+}
+
+
+body.light {
+  background:
+    radial-gradient(circle at top, #e0e7ff 0, #f8fafc 55%, #ffffff 100%);
+}
+
+body.light .hero-card,
+body.light .about-card,
+body.light .card,
+body.light .contact-card {
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  box-shadow: 0 10px 30px rgba(2, 6, 23, 0.08);
+}
+/* Light mode nav styles */
+body.light header {
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.9),
+    transparent
+  );
+}
+body,
+.hero-card,
+.about-card,
+.card,
+.contact-card,
+header,
+nav a,
+.ghost-btn,
+.primary-btn {
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
+}
+/* Theme toggle hover animation */
+#themeToggle {
+  transition: transform 0.2s ease;
+}
+
+#themeToggle:hover {
+  transform: rotate(15deg);
+}
+
   </style>
 </head>
 <body>
@@ -610,9 +719,12 @@
   <div class="page">
     <header>
       <div class="logo">
-        <span id="viewer-count" style="margin-right:6px;">0</span>
-        <span>Visitors</span>
-      </div>
+  <span id="live-time">--:--:--</span>
+</div>
+<button id="themeToggle" class="ghost-btn" title="Toggle theme">
+  🌙
+</button>
+
       <nav>
         <a href="#about">About</a>
         <a href="#skills">Skills</a>
@@ -626,7 +738,7 @@
 
     <main>
       <!-- HERO -->
-      <section class="hero">
+      <section class="hero fade-up">
         <div>
           <div class="hero-badge">
             <span> Personal Creative Website</span>
@@ -657,8 +769,11 @@
           <div class="hero-card-header">
             <div style="display:flex; align-items:center; gap:12px;">
               <div class="hero-avatar">
-                <span>🧑‍💻</span>
-              </div>
+  <img src="profile.jpg" alt="Profile"
+       onerror="this.style.display='none'; this.parentElement.innerHTML='🧑‍💻';"
+       style="width:100%;height:100%;border-radius:20px;object-fit:cover;">
+</div>
+
               <div class="hero-name-block">
                 <span class="label">Profile</span>
                 <h2>MOHAMMED IRSHAD VK</h2>
@@ -701,7 +816,7 @@
       </section>
 
       <!-- ABOUT -->
-      <section id="about">
+      <section id="about" class="fade-up">
         <div class="section-header">
           <h2 class="section-title">About me</h2>
           <p class="section-subtitle">A quick snapshot of who I am.</p>
@@ -725,7 +840,7 @@
       </section>
 
       <!-- SKILLS -->
-      <section id="skills">
+     <section id="skills" class="fade-up">
         <div class="section-header">
           <h2 class="section-title">What I’m into</h2>
           <p class="section-subtitle">Things I’m learning, using, or exploring.</p>
@@ -743,7 +858,7 @@
       </section>
 
       <!-- PROJECTS -->
-      <section id="projects">
+      <section id="projects" class="fade-up">
         <div class="section-header">
           <h2 class="section-title">Little experiments & projects</h2>
           <p class="section-subtitle">A few things I’ve tried or want to try.</p>
@@ -788,7 +903,7 @@
       </section>
 
       <!-- CONTACT -->
-      <section id="contact">
+      <section id="contact" class="fade-up">
         <div class="section-header">
           <h2 class="section-title">Let’s connect</h2>
           <p class="section-subtitle">Login or sign up to see my private contact details.</p>
@@ -842,8 +957,22 @@
           <div class="contact-fields" id="auth-area">
             <!-- Tabs -->
             <div style="display:flex; gap:8px; margin-bottom:8px;">
-              <button type="button" class="ghost-btn" onclick="showAuthMode('login')">Login</button>
-              <button type="button" class="ghost-btn" onclick="showAuthMode('signup')">Sign up</button>
+              <button
+  type="button"
+  class="ghost-btn"
+  onclick="showAuthMode('login')"
+>
+  Login
+</button>
+
+<button
+  type="button"
+  class="ghost-btn"
+  onclick="showAuthMode('signup')"
+>
+  Sign up
+</button>
+
             </div>
 
             <!-- Login form -->
@@ -869,14 +998,6 @@
     Forgot password?
   </button>
 
-  <button
-    type="button"
-    class="ghost-btn"
-    style="align-self:flex-start; font-size:0.75rem; padding:4px 10px; margin-top:4px;"
-    onclick="resendVerification()"
-  >
-    Resend verification email
-  </button>
 </form>
 
             <!-- Signup form -->
@@ -892,7 +1013,16 @@
               <button class="primary-btn" type="submit">
                 Create account <span class="icon">✨</span>
               </button>
-            </form>
+                 <!-- ✅ RESEND HERE -->
+            <button
+  type="button"
+  class="ghost-btn"
+  id="resend-btn"
+  style="display:none"
+  onclick="resendVerificationFromSignup()">
+              Resend verification email
+            </button>
+                      </form>
 
             <div id="auth-message" style="font-size:0.8rem; color:#9ca3af; margin-top:6px;">
               Login or sign up to see my contact details.
@@ -904,152 +1034,244 @@
     </main>
 
     <footer>
-      © <span id="year"></span> Mohammed Irshad VK. All rights reserved.
+      © <span id="year"></span> google . All rights reserved.
     </footer>
   </div>
 
   <!-- Firebase auth, login/signup, verification, reset, show/hide password -->
-  <script type="module">
-    // Firebase imports from CDN
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import {
-      getAuth,
-      createUserWithEmailAndPassword,
-      signInWithEmailAndPassword,
-      signOut,
-      onAuthStateChanged,
-      sendPasswordResetEmail,
-      sendEmailVerification,
-    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import {
+    getAuth,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged,
+    sendPasswordResetEmail,
+    sendEmailVerification
+  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-    // Your Firebase config
-    const firebaseConfig = {
-      apiKey: "AIzaSyDr3YpouSddKSR-9PqKPHDSP1qfwNv-VBM",
-      authDomain: "irshad-website.firebaseapp.com",
-      projectId: "irshad-website",
-      storageBucket: "irshad-website.firebasestorage.app",
-      messagingSenderId: "513828028182",
-      appId: "1:513828028182:web:ceca5d1ac390d5ec731a37"
-    };
+  const firebaseConfig = {
+    apiKey: "AIzaSyDr3YpouSddKSR-9PqKPHDSP1qfwNv-VBM",
+    authDomain: "irshad-website.firebaseapp.com",
+    projectId: "irshad-website",
+    storageBucket: "irshad-website.firebasestorage.app",
+    messagingSenderId: "513828028182",
+    appId: "1:513828028182:web:ceca5d1ac390d5ec731a37"
+  };
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+   window.resendVerificationFromSignup = async function () {
+  const email = document.getElementById("signup-email").value.trim();
+  const password = document.getElementById("signup-password").value.trim();
 
-    // Init
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+  if (!email || !password) {
+    toast("Enter email & password above to resend verification.");
+    return;
+  }
 
-    // UI helpers
-    window.showAuthMode = function (mode) {
-      document.getElementById("auth-message").textContent = "";
-      if (mode === "login") {
-        document.getElementById("login-form").style.display = "flex";
-        document.getElementById("signup-form").style.display = "none";
-      } else {
-        document.getElementById("login-form").style.display = "none";
-        document.getElementById("signup-form").style.display = "flex";
-      }
-    };
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    await sendEmailVerification(userCredential.user);
+    await signOut(auth);
 
-    function setMessage(msg) {
-      document.getElementById("auth-message").innerHTML = msg;
-    }
+    toast("Verification email re-sent 📩 Check inbox or spam.");
+  } catch (err) {
+    toast("Resend failed: " + err.message);
+  }
+};
 
-    function showContacts(show) {
-      document.getElementById("protected-contacts").style.display = show ? "flex" : "none";
-    }
+  function toast(msg, type = "success") {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.className = `show ${type}`;
+  setTimeout(() => (t.className = ""), 3000);
+}
 
-    // Show / hide password
-    window.togglePassword = function (id) {
-      const input = document.getElementById(id);
-      input.type = input.type === "password" ? "text" : "password";
-    };
 
-    // Forgot password
-    window.resetPassword = async function () {
-      const emailInput = document.getElementById("login-email");
-      const email = emailInput.value.trim();
+// Dark / Light toggle
+const themeBtn = document.getElementById("themeToggle");
 
-      if (!email) {
-        setMessage("Enter your email above first, then tap 'Forgot password'.");
-        emailInput.focus();
+function applyTheme(theme) {
+  document.body.classList.toggle("light", theme === "light");
+  themeBtn.textContent = theme === "light" ? "☀️" : "🌙";
+}
+
+// Detect system theme
+const systemPrefersLight = window.matchMedia("(prefers-color-scheme: light)").matches;
+
+// Load saved or system theme
+const savedTheme = localStorage.getItem("theme");
+const initialTheme = savedTheme || (systemPrefersLight ? "light" : "dark");
+
+applyTheme(initialTheme);
+
+// Toggle manually
+themeBtn.onclick = () => {
+  const newTheme = document.body.classList.contains("light") ? "dark" : "light";
+  localStorage.setItem("theme", newTheme);
+  applyTheme(newTheme);
+};
+
+
+
+  /* ---------- UI helpers ---------- */
+ window.showAuthMode = function (mode) {
+  document.getElementById("login-form").style.display =
+    mode === "login" ? "flex" : "none";
+
+  document.getElementById("signup-form").style.display =
+    mode === "signup" ? "flex" : "none";
+
+  // 🔒 Hide resend button by default
+  document.getElementById("resend-btn").style.display = "none";
+};
+
+
+  function showContacts(show) {
+    document.getElementById("protected-contacts").style.display =
+      show ? "flex" : "none";
+  }
+
+  window.togglePassword = function (id) {
+    const input = document.getElementById(id);
+    input.type = input.type === "password" ? "text" : "password";
+  };
+
+  /* ---------- SIGNUP (FIXED) ---------- */
+ document.getElementById("signup-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const email = document.getElementById("signup-email").value.trim();
+  const password = document.getElementById("signup-password").value.trim();
+
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+
+    // Send verification email
+    await sendEmailVerification(userCredential.user);
+
+    // Logout immediately (no auto-login)
+    await signOut(auth);
+
+    // ✅ Success toasts
+    toast("Account created ✅");
+    setTimeout(() => {
+      toast("Verification email sent 📩 Please check inbox");
+    }, 1200);
+
+    // ✅ SHOW resend verification button
+    document.getElementById("resend-btn").style.display = "inline-flex";
+
+    // ✅ Switch to login tab
+    showAuthMode("login");
+
+ } catch (err) {
+  if (err.code === "auth/email-already-in-use") {
+    toast("Email already registered. Please login.", "error");
+  } else if (err.code === "auth/weak-password") {
+    toast("Password must be at least 6 characters.", "error");
+  } else {
+    toast("Signup failed: " + err.message, "error");
+  }
+}
+
+});
+
+  /* ---------- LOGIN ---------- */
+  document.getElementById("login-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById("login-email").value.trim();
+    const password = document.getElementById("login-password").value.trim();
+
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+
+      if (!userCredential.user.emailVerified) {
+        await signOut(auth);
+      toast("Email not verified ❗ Please verify your email first.", "error");
         return;
       }
 
-      try {
-        await sendPasswordResetEmail(auth, email);
-        setMessage("Password reset link sent to " + email + " ✅");
-      } catch (err) {
-        setMessage("Reset failed: " + err.message);
-      }
-    };
+      toast("Login successful ✅");
+    } catch (err) {
+      toast("Login failed: " + err.message);
+    }
+  });
 
-    // Login form
-    const loginForm = document.getElementById("login-form");
-    loginForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const email = document.getElementById("login-email").value.trim();
-      const password = document.getElementById("login-password").value.trim();
-      try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        if (!userCredential.user.emailVerified) {
-          setMessage("Email not verified ❗<br>Check your inbox and verify first.");
-          await signOut(auth);
-          return;
-        }
-        setMessage("Logged in ✅");
-      } catch (err) {
-        setMessage("Login failed: " + err.message);
-      }
-    });
+  /* ---------- FORGOT PASSWORD ---------- */
+  window.resetPassword = async function () {
+    const email = document.getElementById("login-email").value.trim();
+    if (!email) {
+      toast("Enter your email first.");
+      return;
+    }
 
-    // Signup form
-    const signupForm = document.getElementById("signup-form");
-    signupForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const email = document.getElementById("signup-email").value.trim();
-      const password = document.getElementById("signup-password").value.trim();
-      try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        await sendEmailVerification(userCredential.user);
-        setMessage("Account created! Verification email sent 📩<br>Check your inbox to verify.");
-      } catch (err) {
-        setMessage("Signup failed: " + err.message);
-      }
-    });
+    try {
+      await sendPasswordResetEmail(auth, email);
+      toast("Password reset link sent to " + email + " ✅");
+    } catch (err) {
+      toast("Reset failed: " + err.message);
+    }
+  };
 
-    // Logout
-    window.logoutUser = async function () {
+  /* ---------- RESEND VERIFICATION ---------- */
+  window.resendVerification = async function () {
+    const email = document.getElementById("login-email").value.trim();
+    const password = document.getElementById("login-password").value.trim();
+
+    if (!email || !password) {
+      toast("Enter email & password above to resend verification.");
+      return;
+    }
+
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      await sendEmailVerification(userCredential.user);
       await signOut(auth);
-    };
 
-    // React to auth state
-    onAuthStateChanged(auth, (user) => {
-      if (user && user.emailVerified) {
-        showContacts(true);
-        setMessage("Logged in as " + (user.email || "user"));
-      } else {
-        showContacts(false);
-        setMessage("Login or sign up to see my contact details.");
-      }
+      toast("Verification email re-sent 📩<br>Check inbox or spam.");
+    } catch (err) {
+      toast("Resend failed: " + err.message);
+    }
+  };
+
+  /* ---------- LOGOUT ---------- */
+  window.logoutUser = async function () {
+    await signOut(auth);
+  };
+
+  /* ---------- AUTH STATE ---------- */
+  onAuthStateChanged(auth, (user) => {
+    if (user && user.emailVerified) {
+      showContacts(true);
+    } else {
+      showContacts(false);
+    }
+  });
+
+  /* ---------- INIT ---------- */
+  document.getElementById("year").textContent = new Date().getFullYear();
+  showAuthMode("login");
+</script>
+
+  <!--/* ---------- TIME --------- */-->  
+<script>
+  function updateTime() {
+    const now = new Date();
+    const time = now.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit"
     });
+    document.getElementById("live-time").textContent = time;
+  }
 
-    // Footer year
-    const yearEl = document.getElementById("year");
-    if (yearEl) yearEl.textContent = new Date().getFullYear();
+  updateTime();              // initial call
+  setInterval(updateTime, 1000); // update every second
+</script>
+<div id="toast"></div>
 
-    // Default auth mode
-    window.showAuthMode("login");
-  </script>
-
-  <!-- Visitor counter -->
-  <script>
-    // Visitor counter using CountAPI (free)
-    fetch("https://api.countapi.xyz/hit/irshadvkiomp-visitor-counter/viewcount")
-      .then(res => res.json())
-      .then(data => {
-        document.getElementById("viewer-count").innerText = data.value;
-      })
-      .catch(() => {
-        document.getElementById("viewer-count").innerText = "N/A";
-      });
-  </script>
 </body>
 </html>
