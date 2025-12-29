@@ -230,34 +230,49 @@ switchBtn.onclick = () => {
 /* LOGIN */
 loginForm.onsubmit = async e => {
   e.preventDefault();
+  const btn = loginForm.querySelector("button");
+  setLoading(btn, true);
+
   try {
     const user = await signInWithEmailAndPassword(
       auth, loginEmail.value, loginPassword.value
     );
+
     if (!user.user.emailVerified) {
       toast("Verify your email first 📩");
       await signOut(auth);
+      setLoading(btn, false);
       return;
     }
+
     toast("Login successful ✅");
     setTimeout(() => location.href = "index.html", 1200);
+
   } catch (err) {
     toast(err.message);
+    setLoading(btn, false);
   }
 };
 
 /* SIGNUP */
 signupForm.onsubmit = async e => {
   e.preventDefault();
+  const btn = signupForm.querySelector("button");
+  setLoading(btn, true);
+
   try {
     const user = await createUserWithEmailAndPassword(
       auth, signupEmail.value, signupPassword.value
     );
+
     await sendEmailVerification(user.user);
     toast("Verification email sent 📩");
+
   } catch (err) {
     toast(err.message);
   }
+
+  setLoading(btn, false);
 };
 
 /* RESEND */
