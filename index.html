@@ -41,6 +41,14 @@
     transform: translateY(0);
   }
 }
+button.loading {
+  pointer-events: none;
+  opacity: 0.75;
+}
+
+button.loading::after {
+  content: " ⏳";
+}
 /* SAY HI OVERLAY */
 #sayHiOverlay {
   position: fixed;
@@ -1127,14 +1135,6 @@ function showSayHi() {
     overlay.classList.remove("show");
     window.location.href = "auth.html";
   }, 1800);
-}
-button.loading {
-  pointer-events: none;
-  opacity: 0.75;
-}
-
-button.loading::after {
-  content: " ⏳";
 }
 </script>
 <script>
