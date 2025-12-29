@@ -56,39 +56,57 @@
   z-index: 9999;
 }
 
+#sayHiOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 6, 23, 0.92);
+  backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
 #sayHiOverlay.show {
   opacity: 1;
   pointer-events: all;
 }
 
 .say-hi-card {
-  background: rgba(15, 23, 42, 0.95);
-  border: 1px solid rgba(148, 163, 184, 0.3);
+  background: linear-gradient(
+    180deg,
+    rgba(15,23,42,0.95),
+    rgba(2,6,23,0.95)
+  );
+  border: 1px solid rgba(148,163,184,0.25);
   border-radius: 22px;
-  padding: 36px 40px;
+  padding: 36px 42px;
   text-align: center;
-  box-shadow: 0 30px 60px rgba(0,0,0,0.8);
-  animation: hiPop 0.6s cubic-bezier(0.22,1,0.36,1);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.8);
+  animation: popIn 0.6s cubic-bezier(0.22,1,0.36,1);
 }
 
 .say-hi-card h2 {
-  margin: 10px 0 6px;
-  font-size: 1.8rem;
+  font-size: 2rem;
+  margin-top: 10px;
 }
 
 .say-hi-card p {
+  color: #94a3b8;
   font-size: 0.95rem;
-  color: #9ca3af;
+  margin-top: 6px;
 }
 
 .wave {
-  font-size: 3.2rem;
+  font-size: 3.8rem;
   display: inline-block;
-  animation: wave 1.4s infinite;
+  animation: wave 1.2s infinite;
 }
 
-/* Animations */
-@keyframes hiPop {
+@keyframes popIn {
   from {
     opacity: 0;
     transform: scale(0.85) translateY(20px);
@@ -775,6 +793,18 @@ nav a,
 #themeToggle:hover {
   transform: rotate(15deg);
 }
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: 
+    opacity 0.7s ease,
+    transform 0.7s ease;
+}
+
+.reveal.show {
+  opacity: 1;
+  transform: translateY(0);
+}
 
   </style>
 </head>
@@ -787,6 +817,7 @@ nav a,
     <p>Thanks for stopping by</p>
   </div>
 </div>
+
   <div class="gradient-orbit"></div>
 
   <div class="page">
@@ -812,7 +843,7 @@ nav a,
   Login / Sign up 🔐
 </a>
 
-       <button class="primary-btn" onclick="showSayHi()">
+       <button class="primary-btn" onclick="showSayHi()" aria-label="Say Hi and continue">
   Say Hi <span class="icon">👋</span>
 </button>
       </nav>
@@ -898,7 +929,7 @@ nav a,
       </section>
 
       <!-- ABOUT -->
-      <section id="about" class="fade-up">
+      <section id="about" class="reveal">
         <div class="section-header">
           <h2 class="section-title">About me</h2>
           <p class="section-subtitle">A quick snapshot of who I am.</p>
@@ -922,7 +953,7 @@ nav a,
       </section>
 
       <!-- SKILLS -->
-     <section id="skills" class="fade-up">
+     <section id="skills" class="reveal">
         <div class="section-header">
           <h2 class="section-title">What I’m into</h2>
           <p class="section-subtitle">Things I’m learning, using, or exploring.</p>
@@ -940,7 +971,7 @@ nav a,
       </section>
 
       <!-- PROJECTS -->
-      <section id="projects" class="fade-up">
+      <section id="projects" class="reveal">
         <div class="section-header">
           <h2 class="section-title">Little experiments & projects</h2>
           <p class="section-subtitle">A few things I’ve tried or want to try.</p>
@@ -985,7 +1016,7 @@ nav a,
       </section>
 
       <!-- CONTACT -->
-      <section id="contact" class="fade-up">
+      <section id="contact" class="reveal">
         <div class="section-header">
           <h2 class="section-title">Let’s connect</h2>
           <p class="section-subtitle">Login or sign up to see my private contact details.</p>
@@ -1013,7 +1044,16 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-
+function setLoading(btn, state) {
+  if (state) {
+    btn.classList.add("loading");
+    btn.dataset.text = btn.textContent;
+    btn.textContent = "Please wait";
+  } else {
+    btn.classList.remove("loading");
+    btn.textContent = btn.dataset.text;
+  }
+}
 // SHOW / HIDE PRIVATE CONTACTS
 onAuthStateChanged(auth, user => {
   const contacts = document.getElementById("protected-contacts");
@@ -1077,14 +1117,70 @@ if (themeBtn) {
 <script>
 function showSayHi() {
   const overlay = document.getElementById("sayHiOverlay");
+
   overlay.classList.add("show");
+
+  // 🔊 SOUND (NO FILE)
+  playHiSound();
 
   setTimeout(() => {
     overlay.classList.remove("show");
-    // OPTIONAL redirect after animation
-    // location.href = "auth.html";
+    window.location.href = "auth.html";
   }, 1800);
 }
+button.loading {
+  pointer-events: none;
+  opacity: 0.75;
+}
+
+button.loading::after {
+  content: " ⏳";
+}
+</script>
+<script>
+function playHiSound() {
+  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+
+  osc.type = "triangle";
+
+  osc.frequency.setValueAtTime(520, ctx.currentTime);
+  osc.frequency.exponentialRampToValueAtTime(
+    880,
+    ctx.currentTime + 0.18
+  );
+
+  gain.gain.setValueAtTime(0.18, ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(
+    0.001,
+    ctx.currentTime + 0.45
+  );
+
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+
+  osc.start();
+  osc.stop(ctx.currentTime + 0.45);
+}
+</script>
+<script>
+const reveals = document.querySelectorAll(".reveal");
+
+const observer = new IntersectionObserver(
+  entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("show");
+        observer.unobserve(entry.target);
+      }
+    });
+  },
+  { threshold: 0.15 }
+);
+
+reveals.forEach(el => observer.observe(el));
 </script>
 </body>
 </html>
