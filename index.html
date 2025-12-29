@@ -730,6 +730,15 @@ nav a,
         <a href="#skills">Skills</a>
         <a href="#projects">Work</a>
         <a href="#contact">Contact</a>
+        <a
+  href="auth.html"
+  class="primary-btn"
+  id="login-btn"
+  style="margin-top:12px; display:inline-flex;"
+>
+  Login / Sign up 🔐
+</a>
+
         <a href="#contact" class="primary-btn">
           Say Hi <span class="icon">👋</span>
         </a>
@@ -916,362 +925,81 @@ nav a,
               you’re always welcome to reach out.
             </p>
 
-            <!-- Contact details – visible only when logged in -->
-            <div class="contact-meta" id="protected-contacts" style="display:none; margin-top:10px;">
-              <span><b>Connect with me:</b></span>
-
-              <div class="social-buttons">
-                <!-- Email -->
-                <a href="mailto:irshadvkiomp@gmail.com" class="social-btn">
-                  <span class="icon">✉️</span> Email
-                </a>
-
-                <!-- WhatsApp -->
-                <a href="https://wa.me/919847355952?text=hi%20your%20project%20is%20good" target="_blank" class="social-btn">
-                  <span class="icon">📱</span> WhatsApp
-                </a>
-
-                <!-- Instagram -->
-                <a href="https://instagram.com/irshad_vk_omp" target="_blank" class="social-btn">
-                  <span class="icon">📸</span> Instagram
-                </a>
-
-                <!-- Facebook -->
-                <a href="https://www.facebook.com/share/1Cd4HDGszA/" target="_blank" class="social-btn">
-                  <span class="icon">📘</span> Facebook
-                </a>
-
-                <!-- Snapchat -->
-                <a href="https://www.snapchat.com/add/vkiomp?share_id=GLN9OQRWWW0&locale=en-GB" target="_blank" class="social-btn">
-                  <span class="icon">👻</span> Snapchat
-                </a>
-              </div>
-
-              <button class="ghost-btn" type="button" onclick="logoutUser()" style="margin-top:12px; max-width:max-content;">
-                Logout
-              </button>
-            </div>
-          </div>
-
-          <!-- Auth area: login / signup -->
-          <div class="contact-fields" id="auth-area">
-            <!-- Tabs -->
-            <div style="display:flex; gap:8px; margin-bottom:8px;">
-              <button
-  type="button"
-  class="ghost-btn"
-  onclick="showAuthMode('login')"
->
-  Login
-</button>
-
-<button
-  type="button"
-  class="ghost-btn"
-  onclick="showAuthMode('signup')"
->
-  Sign up
-</button>
-
-            </div>
-
-            <!-- Login form -->
- <form id="login-form" style="display:flex; flex-direction:column; gap:8px;">
-  <input class="input" type="email" id="login-email" placeholder="Email" required />
-  <div style="position:relative;">
-    <input class="input" type="password" id="login-password" placeholder="Password" required />
-    <span onclick="togglePassword('login-password')"
-          style="position:absolute; right:10px; top:50%; transform:translateY(-50%); cursor:pointer; font-size:0.9rem; color:#a855f7;">
-      👁️
-    </span>
-  </div>
-  <button class="primary-btn" type="submit">
-    Login <span class="icon">🔓</span>
-  </button>
-
-  <button
-    type="button"
-    class="ghost-btn"
-    style="align-self:flex-start; font-size:0.75rem; padding:4px 10px; margin-top:4px;"
-    onclick="resetPassword()"
-  >
-    Forgot password?
-  </button>
-
-</form>
-
-            <!-- Signup form -->
-            <form id="signup-form" style="display:none; flex-direction:column; gap:8px;">
-              <input class="input" type="email" id="signup-email" placeholder="Email" required />
-              <div style="position:relative;">
-                <input class="input" type="password" id="signup-password" placeholder="Password (min 6 chars)" required />
-                <span onclick="togglePassword('signup-password')"
-                      style="position:absolute; right:10px; top:50%; transform:translateY(-50%); cursor:pointer; font-size:0.9rem; color:#a855f7;">
-                  👁️
-                </span>
-              </div>
-              <button class="primary-btn" type="submit">
-                Create account <span class="icon">✨</span>
-              </button>
-                 <!-- ✅ RESEND HERE -->
-            <button
-  type="button"
-  class="ghost-btn"
-  id="resend-btn"
-  style="display:none"
-  onclick="resendVerificationFromSignup()">
-              Resend verification email
-            </button>
-                      </form>
-
-            <div id="auth-message" style="font-size:0.8rem; color:#9ca3af; margin-top:6px;">
-              Login or sign up to see my contact details.
-            </div>
-          </div>
-        </div>
-      </section>
-
-    </main>
-
-    <footer>
-      © <span id="year"></span> google . All rights reserved.
-    </footer>
-  </div>
-
   <!-- Firebase auth, login/signup, verification, reset, show/hide password -->
+<div id="toast"></div>
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import {
-    getAuth,
-    createUserWithEmailAndPassword,
-    signInWithEmailAndPassword,
-    signOut,
-    onAuthStateChanged,
-    sendPasswordResetEmail,
-    sendEmailVerification
-  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyDr3YpouSddKSR-9PqKPHDSP1qfwNv-VBM",
-    authDomain: "irshad-website.firebaseapp.com",
-    projectId: "irshad-website",
-    storageBucket: "irshad-website.firebasestorage.app",
-    messagingSenderId: "513828028182",
-    appId: "1:513828028182:web:ceca5d1ac390d5ec731a37"
-  };
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-   window.resendVerificationFromSignup = async function () {
-  const email = document.getElementById("signup-email").value.trim();
-  const password = document.getElementById("signup-password").value.trim();
-
-  if (!email || !password) {
-    toast("Enter email & password above to resend verification.");
-    return;
-  }
-
-  try {
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    await sendEmailVerification(userCredential.user);
-    await signOut(auth);
-
-    toast("Verification email re-sent 📩 Check inbox or spam.");
-  } catch (err) {
-    toast("Resend failed: " + err.message);
-  }
+const firebaseConfig = {
+  apiKey: "AIzaSyDr3YpouSddKSR-9PqKPHDSP1qfwNv-VBM",
+  authDomain: "irshad-website.firebaseapp.com",
+  projectId: "irshad-website",
+  appId: "1:513828028182:web:ceca5d1ac390d5ec731a37"
 };
 
-  function toast(msg, type = "success") {
-  const t = document.getElementById("toast");
-  t.textContent = msg;
-  t.className = `show ${type}`;
-  setTimeout(() => (t.className = ""), 3000);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+// SHOW / HIDE PRIVATE CONTACTS
+onAuthStateChanged(auth, user => {
+  const contacts = document.getElementById("protected-contacts");
+  const loginBtn = document.getElementById("login-btn");
+
+  if (user && user.emailVerified) {
+    contacts.style.display = "flex";
+    loginBtn.style.display = "none";
+  } else {
+    contacts.style.display = "none";
+    loginBtn.style.display = "inline-flex";
+  }
+});
+
+window.logoutUser = async () => {
+  await signOut(auth);
+  location.reload();
+};
+</script>
+<script>
+function updateTime() {
+  const now = new Date();
+  const time = now.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit"
+  });
+  const el = document.getElementById("live-time");
+  if (el) el.textContent = time;
 }
 
-
-// Dark / Light toggle
+updateTime();
+setInterval(updateTime, 1000);
+</script>
+<script>
 const themeBtn = document.getElementById("themeToggle");
 
 function applyTheme(theme) {
   document.body.classList.toggle("light", theme === "light");
-  themeBtn.textContent = theme === "light" ? "☀️" : "🌙";
+  if (themeBtn) {
+    themeBtn.textContent = theme === "light" ? "☀️" : "🌙";
+  }
 }
 
-// Detect system theme
+// system preference
 const systemPrefersLight = window.matchMedia("(prefers-color-scheme: light)").matches;
-
-// Load saved or system theme
 const savedTheme = localStorage.getItem("theme");
 const initialTheme = savedTheme || (systemPrefersLight ? "light" : "dark");
 
 applyTheme(initialTheme);
 
-// Toggle manually
-themeBtn.onclick = () => {
-  const newTheme = document.body.classList.contains("light") ? "dark" : "light";
-  localStorage.setItem("theme", newTheme);
-  applyTheme(newTheme);
-};
-
-
-
-  /* ---------- UI helpers ---------- */
- window.showAuthMode = function (mode) {
-  document.getElementById("login-form").style.display =
-    mode === "login" ? "flex" : "none";
-
-  document.getElementById("signup-form").style.display =
-    mode === "signup" ? "flex" : "none";
-
-  // 🔒 Hide resend button by default
-  document.getElementById("resend-btn").style.display = "none";
-};
-
-
-  function showContacts(show) {
-    document.getElementById("protected-contacts").style.display =
-      show ? "flex" : "none";
-  }
-
-  window.togglePassword = function (id) {
-    const input = document.getElementById(id);
-    input.type = input.type === "password" ? "text" : "password";
+// toggle
+if (themeBtn) {
+  themeBtn.onclick = () => {
+    const newTheme = document.body.classList.contains("light") ? "dark" : "light";
+    localStorage.setItem("theme", newTheme);
+    applyTheme(newTheme);
   };
-
-  /* ---------- SIGNUP (FIXED) ---------- */
- document.getElementById("signup-form").addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  const email = document.getElementById("signup-email").value.trim();
-  const password = document.getElementById("signup-password").value.trim();
-
-  try {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-
-    // Send verification email
-    await sendEmailVerification(userCredential.user);
-
-    // Logout immediately (no auto-login)
-    await signOut(auth);
-
-    // ✅ Success toasts
-    toast("Account created ✅");
-    setTimeout(() => {
-      toast("Verification email sent 📩 Please check inbox");
-    }, 1200);
-
-    // ✅ SHOW resend verification button
-    document.getElementById("resend-btn").style.display = "inline-flex";
-
-    // ✅ Switch to login tab
-    showAuthMode("login");
-
- } catch (err) {
-  if (err.code === "auth/email-already-in-use") {
-    toast("Email already registered. Please login.", "error");
-  } else if (err.code === "auth/weak-password") {
-    toast("Password must be at least 6 characters.", "error");
-  } else {
-    toast("Signup failed: " + err.message, "error");
-  }
 }
-
-});
-
-  /* ---------- LOGIN ---------- */
-  document.getElementById("login-form").addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const email = document.getElementById("login-email").value.trim();
-    const password = document.getElementById("login-password").value.trim();
-
-    try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-
-      if (!userCredential.user.emailVerified) {
-        await signOut(auth);
-      toast("Email not verified ❗ Please verify your email first.", "error");
-        return;
-      }
-
-      toast("Login successful ✅");
-    } catch (err) {
-      toast("Login failed: " + err.message);
-    }
-  });
-
-  /* ---------- FORGOT PASSWORD ---------- */
-  window.resetPassword = async function () {
-    const email = document.getElementById("login-email").value.trim();
-    if (!email) {
-      toast("Enter your email first.");
-      return;
-    }
-
-    try {
-      await sendPasswordResetEmail(auth, email);
-      toast("Password reset link sent to " + email + " ✅");
-    } catch (err) {
-      toast("Reset failed: " + err.message);
-    }
-  };
-
-  /* ---------- RESEND VERIFICATION ---------- */
-  window.resendVerification = async function () {
-    const email = document.getElementById("login-email").value.trim();
-    const password = document.getElementById("login-password").value.trim();
-
-    if (!email || !password) {
-      toast("Enter email & password above to resend verification.");
-      return;
-    }
-
-    try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      await sendEmailVerification(userCredential.user);
-      await signOut(auth);
-
-      toast("Verification email re-sent 📩<br>Check inbox or spam.");
-    } catch (err) {
-      toast("Resend failed: " + err.message);
-    }
-  };
-
-  /* ---------- LOGOUT ---------- */
-  window.logoutUser = async function () {
-    await signOut(auth);
-  };
-
-  /* ---------- AUTH STATE ---------- */
-  onAuthStateChanged(auth, (user) => {
-    if (user && user.emailVerified) {
-      showContacts(true);
-    } else {
-      showContacts(false);
-    }
-  });
-
-  /* ---------- INIT ---------- */
-  document.getElementById("year").textContent = new Date().getFullYear();
-  showAuthMode("login");
 </script>
-
-  <!--/* ---------- TIME --------- */-->  
-<script>
-  function updateTime() {
-    const now = new Date();
-    const time = now.toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit"
-    });
-    document.getElementById("live-time").textContent = time;
-  }
-
-  updateTime();              // initial call
-  setInterval(updateTime, 1000); // update every second
-</script>
-<div id="toast"></div>
-
 </body>
 </html>
