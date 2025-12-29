@@ -1124,27 +1124,58 @@ if (themeBtn) {
 </script>
 <script>
 function showSayHi() {
+
+  /* ⏰ Greeting */
+  function getGreetingByTime() {
+    const hour = new Date().getHours();
+    const extras = ["Hope you're doing well ✨", "Nice to meet you 😊"];
+    const extra = extras[Math.floor(Math.random() * extras.length)];
+
+    if (hour >= 5 && hour < 12) return `Good morning ☀️ ${extra}`;
+    if (hour >= 12 && hour < 17) return `Good afternoon 😊 ${extra}`;
+    if (hour >= 17 && hour < 21) return `Good evening 🌆 ${extra}`;
+    return `Hello 🌙 ${extra}`;
+  }
+
+  const greeting = getGreetingByTime(); // ✅ IMPORTANT
+
   const overlay = document.getElementById("sayHiOverlay");
+  const textEl = document.getElementById("typingText");
+
   overlay.classList.add("show");
 
   playHiSound();
-  vibrateHi(); // 📳 mobile vibration
- setTimeout(() => {
-    const txt = document.getElementById("typingText");
-    if (txt) txt.textContent = "Opening WhatsApp…";
+  vibrateHi();
+
+  // ✍️ show greeting
+  if (textEl) textEl.textContent = greeting;
+
+  // ⏳ change text before redirect
+  setTimeout(() => {
+    if (textEl) textEl.textContent = "Opening WhatsApp…";
   }, 700);
- setTimeout(() => {
-  overlay.classList.remove("show");
 
-  const msg = encodeURIComponent(
-    "Hi Irshad 👋 I just visited your website!"
+  // 📲 redirect
+  setTimeout(() => {
+    overlay.classList.remove("show");
+    openWhatsAppSmart(greeting);
+  }, 1800);
+}
+
+/* 📲 WhatsApp smart open */
+function openWhatsAppSmart(greeting) {
+  const message = encodeURIComponent(
+    `${greeting} Irshad 👋 I just visited your website!`
   );
 
-  window.open(
-    "https://wa.me/919847355952?text=" + msg,
-    "_blank"
-  );
-}, 1800);
+  const phone = "919847355952";
+  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+  const url = isMobile
+    ? `https://wa.me/${phone}?text=${message}`
+    : `https://web.whatsapp.com/send?phone=${phone}&text=${message}`;
+
+  window.location.href = url;
 }
 </script>
 <script>
@@ -1214,4 +1245,3 @@ reveals.forEach(el => observer.observe(el));
 </script>
 </body>
 </html>
-
