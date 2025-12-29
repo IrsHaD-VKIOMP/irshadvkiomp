@@ -2,129 +2,195 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>irshadvkiomp</title>
+<title>Auth | irshadvkiomp</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
-body{
-  margin:0;
-  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  background:radial-gradient(circle at top,#1e293b 0,#020617 60%,#000 100%);
-  color:#f9fafb;
+:root {
+  --primary: #7c3aed;
+  --secondary: #4f46e5;
+  --bg: #020617;
+  --card: rgba(15,23,42,0.95);
+  --border: rgba(148,163,184,0.15);
+  --text: #e5e7eb;
+  --muted: #94a3b8;
 }
 
-.page{
-  max-width:1100px;
-  margin:auto;
-  padding:20px;
+* { box-sizing: border-box; }
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(800px circle at 20% 10%, rgba(124,58,237,0.15), transparent 40%),
+    radial-gradient(800px circle at 80% 90%, rgba(79,70,229,0.12), transparent 40%),
+    var(--bg);
+  color: var(--text);
 }
 
-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:40px;
+/* CARD */
+.box {
+  width: 100%;
+  max-width: 390px;
+  padding: 30px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, var(--card), rgba(2,6,23,0.95));
+  border: 1px solid var(--border);
+  box-shadow:
+    0 30px 60px rgba(0,0,0,0.8),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+  animation: popIn 0.6s cubic-bezier(0.22,1,0.36,1);
 }
 
-.logo{
-  padding:6px 14px;
-  border-radius:999px;
-  background:#0f172a;
-  font-weight:600;
+/* HEAD */
+h2 {
+  margin-bottom: 6px;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+.sub {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 18px;
 }
 
-.primary-btn{
-  padding:10px 18px;
-  border-radius:999px;
-  background:linear-gradient(135deg,#4f46e5,#7c3aed);
-  color:white;
-  text-decoration:none;
-  display:inline-flex;
-  gap:8px;
-  align-items:center;
-  font-size:.9rem;
+/* INPUTS */
+input {
+  width: 100%;
+  padding: 14px;
+  margin-top: 12px;
+  border-radius: 12px;
+  background: rgba(2,6,23,0.8);
+  border: 1px solid rgba(148,163,184,0.2);
+  color: #f9fafb;
+  font-size: 0.95rem;
+  outline: none;
+  transition: 0.2s;
 }
 
-.ghost-btn{
-  padding:8px 16px;
-  border-radius:999px;
-  border:1px solid #64748b;
-  background:#0f172a;
-  color:#cbd5f5;
-  cursor:pointer;
+input::placeholder { color: var(--muted); }
+
+input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(124,58,237,0.25);
 }
 
-.contact-card{
-  background:rgba(15,23,42,.95);
-  border-radius:20px;
-  padding:20px;
-  max-width:600px;
+/* BUTTONS */
+button {
+  width: 100%;
+  margin-top: 14px;
+  padding: 13px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: white;
+  transition: 0.15s;
 }
 
-.social-buttons{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-top:12px;
+button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 25px rgba(124,58,237,0.4);
+}
+button:active { transform: scale(0.97); }
+
+.secondary {
+  background: transparent;
+  border: 1px solid #334155;
+  color: #cbd5f5;
+}
+.secondary:hover { background: rgba(255,255,255,0.05); }
+
+.link {
+  text-align: right;
+  margin-top: 6px;
+  font-size: 0.85rem;
+  color: #a5b4fc;
+  cursor: pointer;
+}
+.link:hover { text-decoration: underline; }
+
+/* FORMS */
+form {
+  transition: 0.25s ease;
+}
+form.hidden {
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+  height: 0;
+  overflow: hidden;
 }
 
-.social-btn{
-  padding:8px 14px;
-  border-radius:14px;
-  background:linear-gradient(135deg,#4f46e5,#7c3aed);
-  color:white;
-  text-decoration:none;
-  font-size:.85rem;
+/* TOAST */
+#toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #0f172a;
+  padding: 12px 18px;
+  border-radius: 12px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: 0.3s;
+}
+#toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ANIM */
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.95) translateY(20px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
 }
 </style>
 </head>
 
 <body>
 
-<div class="page">
+<div class="box">
+  <h2 id="title">Login</h2>
+  <div class="sub" id="subtitle">Welcome back 👋</div>
 
-<header>
-  <div class="logo" id="live-time">--:--:--</div>
-  <a href="auth.html" id="login-link" class="primary-btn">
-    Login / Sign up
-  </a>
-</header>
+  <!-- LOGIN -->
+  <form id="loginForm">
+    <input id="loginEmail" type="email" placeholder="Email" required>
+    <input id="loginPassword" type="password" placeholder="Password" required>
+    <div class="link" id="forgotBtn">Forgot password?</div>
+    <button>Login</button>
+  </form>
 
-<section id="contact">
-  <h2>Let’s connect</h2>
-  <p>Login to see my private contact details.</p>
+  <!-- SIGNUP -->
+  <form id="signupForm" class="hidden">
+    <input id="signupEmail" type="email" placeholder="Email" required>
+    <input id="signupPassword" type="password" placeholder="Password (min 6)" required>
+    <button>Create account</button>
+    <button type="button" class="secondary" id="resendBtn">Resend verification email</button>
+  </form>
 
-  <div class="contact-card">
-
-    <!-- PRIVATE CONTACTS -->
-    <div id="protected-contacts" style="display:none;">
-      <div class="social-buttons">
-        <a href="mailto:irshadvkiomp@gmail.com" class="social-btn">✉️ Email</a>
-        <a href="https://wa.me/919847355952" class="social-btn">📱 WhatsApp</a>
-        <a href="https://instagram.com/irshad_vk_omp" class="social-btn">📸 Instagram</a>
-        <a href="https://facebook.com" class="social-btn">📘 Facebook</a>
-        <a href="https://snapchat.com/add/vkiomp" class="social-btn">👻 Snapchat</a>
-      </div>
-
-      <button onclick="logoutUser()" class="ghost-btn" style="margin-top:14px;">
-        Logout
-      </button>
-    </div>
-
-  </div>
-</section>
-
+  <button class="secondary" id="switchBtn">Go to Sign up</button>
 </div>
 
-<!-- FIREBASE AUTH CHECK ONLY -->
+<div id="toast"></div>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import {
   getAuth,
-  onAuthStateChanged,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  sendEmailVerification,
+  sendPasswordResetEmail,
   signOut
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
+/* 🔥 FIREBASE CONFIG */
 const firebaseConfig = {
   apiKey: "AIzaSyDr3YpouSddKSR-9PqKPHDSP1qfwNv-VBM",
   authDomain: "irshad-website.firebaseapp.com",
@@ -135,31 +201,92 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-onAuthStateChanged(auth, user => {
-  const contacts = document.getElementById("protected-contacts");
-  const loginBtn = document.getElementById("login-link");
+/* UI */
+const loginForm = document.getElementById("loginForm");
+const signupForm = document.getElementById("signupForm");
+const switchBtn = document.getElementById("switchBtn");
+const title = document.getElementById("title");
+const subtitle = document.getElementById("subtitle");
+const resendBtn = document.getElementById("resendBtn");
+const forgotBtn = document.getElementById("forgotBtn");
 
-  if (user && user.emailVerified) {
-    contacts.style.display = "block";
-    loginBtn.style.display = "none";
-  } else {
-    contacts.style.display = "none";
-    loginBtn.style.display = "inline-flex";
-  }
-});
+const toastEl = document.getElementById("toast");
+function toast(msg) {
+  toastEl.textContent = msg;
+  toastEl.classList.add("show");
+  setTimeout(() => toastEl.classList.remove("show"), 3000);
+}
 
-window.logoutUser = async () => {
-  await signOut(auth);
-  location.href = "auth.html";
+/* SWITCH */
+switchBtn.onclick = () => {
+  const login = !loginForm.classList.contains("hidden");
+  loginForm.classList.toggle("hidden", login);
+  signupForm.classList.toggle("hidden", !login);
+  title.textContent = login ? "Sign up" : "Login";
+  subtitle.textContent = login ? "Create your account ✨" : "Welcome back 👋";
+  switchBtn.textContent = login ? "Go to Login" : "Go to Sign up";
 };
-</script>
 
-<!-- TIME -->
-<script>
-setInterval(()=>{
-  document.getElementById("live-time").textContent =
-    new Date().toLocaleTimeString();
-},1000);
+/* LOGIN */
+loginForm.onsubmit = async e => {
+  e.preventDefault();
+  try {
+    const user = await signInWithEmailAndPassword(
+      auth, loginEmail.value, loginPassword.value
+    );
+    if (!user.user.emailVerified) {
+      toast("Verify your email first 📩");
+      await signOut(auth);
+      return;
+    }
+    toast("Login successful ✅");
+    setTimeout(() => location.href = "index.html", 1200);
+  } catch (err) {
+    toast(err.message);
+  }
+};
+
+/* SIGNUP */
+signupForm.onsubmit = async e => {
+  e.preventDefault();
+  try {
+    const user = await createUserWithEmailAndPassword(
+      auth, signupEmail.value, signupPassword.value
+    );
+    await sendEmailVerification(user.user);
+    toast("Verification email sent 📩");
+  } catch (err) {
+    toast(err.message);
+  }
+};
+
+/* RESEND */
+resendBtn.onclick = async () => {
+  try {
+    const user = await signInWithEmailAndPassword(
+      auth, signupEmail.value, signupPassword.value
+    );
+    await sendEmailVerification(user.user);
+    await signOut(auth);
+    toast("Verification email re-sent ✨");
+  } catch (err) {
+    toast(err.message);
+  }
+};
+
+/* FORGOT PASSWORD */
+forgotBtn.onclick = async () => {
+  if (!loginEmail.value) {
+    toast("Enter your email first");
+    return;
+  }
+  try {
+    await sendPasswordResetEmail(auth, loginEmail.value);
+    toast("Password reset email sent 🔐");
+  } catch (err) {
+    toast(err.message);
+  }
+};
 </script>
 
 </body>
