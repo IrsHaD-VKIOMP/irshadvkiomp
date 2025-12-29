@@ -41,7 +41,72 @@
     transform: translateY(0);
   }
 }
+/* SAY HI OVERLAY */
+#sayHiOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 6, 23, 0.75);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 9999;
+}
 
+#sayHiOverlay.show {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.say-hi-card {
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  border-radius: 22px;
+  padding: 36px 40px;
+  text-align: center;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+  animation: hiPop 0.6s cubic-bezier(0.22,1,0.36,1);
+}
+
+.say-hi-card h2 {
+  margin: 10px 0 6px;
+  font-size: 1.8rem;
+}
+
+.say-hi-card p {
+  font-size: 0.95rem;
+  color: #9ca3af;
+}
+
+.wave {
+  font-size: 3.2rem;
+  display: inline-block;
+  animation: wave 1.4s infinite;
+}
+
+/* Animations */
+@keyframes hiPop {
+  from {
+    opacity: 0;
+    transform: scale(0.85) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes wave {
+  0% { transform: rotate(0deg); }
+  20% { transform: rotate(15deg); }
+  40% { transform: rotate(-10deg); }
+  60% { transform: rotate(15deg); }
+  80% { transform: rotate(-5deg); }
+  100% { transform: rotate(0deg); }
+}
 
     :root {
       --bg: #050816;
@@ -714,6 +779,14 @@ nav a,
   </style>
 </head>
 <body>
+  <!-- SAY HI OVERLAY -->
+<div id="sayHiOverlay">
+  <div class="say-hi-card">
+    <span class="wave">👋</span>
+    <h2>Say Hi!</h2>
+    <p>Thanks for stopping by</p>
+  </div>
+</div>
   <div class="gradient-orbit"></div>
 
   <div class="page">
@@ -739,9 +812,9 @@ nav a,
   Login / Sign up 🔐
 </a>
 
-        <a href="#contact" class="primary-btn">
-          Say Hi <span class="icon">👋</span>
-        </a>
+       <button class="primary-btn" onclick="showSayHi()">
+  Say Hi <span class="icon">👋</span>
+</button>
       </nav>
     </header>
 
@@ -999,6 +1072,18 @@ if (themeBtn) {
     localStorage.setItem("theme", newTheme);
     applyTheme(newTheme);
   };
+}
+</script>
+<script>
+function showSayHi() {
+  const overlay = document.getElementById("sayHiOverlay");
+  overlay.classList.add("show");
+
+  setTimeout(() => {
+    overlay.classList.remove("show");
+    // OPTIONAL redirect after animation
+    // location.href = "auth.html";
+  }, 1800);
 }
 </script>
 </body>
