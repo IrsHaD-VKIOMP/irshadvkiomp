@@ -1129,13 +1129,22 @@ function showSayHi() {
 
   playHiSound();
   vibrateHi(); // 📳 mobile vibration
+ setTimeout(() => {
+    const txt = document.getElementById("typingText");
+    if (txt) txt.textContent = "Opening WhatsApp…";
+  }, 700);
+ setTimeout(() => {
+  overlay.classList.remove("show");
 
-  typeText("Thanks for stopping by", "typingText");
+  const msg = encodeURIComponent(
+    "Hi Irshad 👋 I just visited your website!"
+  );
 
-  setTimeout(() => {
-    overlay.classList.remove("show");
-    window.location.href = "auth.html";
-  }, 1800);
+  window.open(
+    "https://wa.me/9847355952?text=" + msg,
+    "_blank"
+  );
+}, 1800);
 }
 </script>
 <script>
