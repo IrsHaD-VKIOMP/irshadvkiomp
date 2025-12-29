@@ -822,7 +822,7 @@ nav a,
   <div class="say-hi-card">
     <span class="wave">👋</span>
     <h2>Say Hi!</h2>
-    <p>Thanks for stopping by</p>
+    <p id="typingText"></p>
   </div>
 </div>
 
@@ -1125,16 +1125,37 @@ if (themeBtn) {
 <script>
 function showSayHi() {
   const overlay = document.getElementById("sayHiOverlay");
-
   overlay.classList.add("show");
 
-  // 🔊 SOUND (NO FILE)
   playHiSound();
+  vibrateHi(); // 📳 mobile vibration
+
+  typeText("Thanks for stopping by", "typingText");
 
   setTimeout(() => {
     overlay.classList.remove("show");
     window.location.href = "auth.html";
   }, 1800);
+}
+</script>
+<script>
+function vibrateHi() {
+  if ("vibrate" in navigator) {
+    navigator.vibrate([60, 30, 120]); // tap-pause-tap
+  }
+}
+</script>
+<script>
+function typeText(text, elementId, speed = 45) {
+  const el = document.getElementById(elementId);
+  el.textContent = "";
+  let i = 0;
+
+  const interval = setInterval(() => {
+    el.textContent += text[i];
+    i++;
+    if (i >= text.length) clearInterval(interval);
+  }, speed);
 }
 </script>
 <script>
