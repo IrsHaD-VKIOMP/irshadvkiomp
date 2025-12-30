@@ -813,7 +813,42 @@ nav a,
   opacity: 1;
   transform: translateY(0);
 }
+/* Say Hi pulse */
+.primary-btn.pulse {
+  animation: pulseGlow 0.6s ease;
+}
 
+@keyframes pulseGlow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(139,92,246,0.6);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 0 14px rgba(139,92,246,0);
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Ripple glow */
+.glow-ripple {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(139,92,246,0.4);
+  animation: ripple 0.7s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes ripple {
+  to {
+    transform: scale(18);
+    opacity: 0;
+  }
+}
   </style>
 </head>
 <body>
@@ -821,8 +856,8 @@ nav a,
 <div id="sayHiOverlay">
   <div class="say-hi-card">
     <span class="wave">👋</span>
-    <h2>Say Hi!</h2>
-    <p id="typingText"></p>
+    <h2 id="typingText">Say Hi!</h2>
+    <p>Connecting you…</p>
   </div>
 </div>
 
@@ -851,9 +886,14 @@ nav a,
   Login / Sign up 🔐
 </a>
 
-       <button class="primary-btn" onclick="showSayHi()" aria-label="Say Hi and continue">
+       <button
+  class="primary-btn"
+  id="sayHiBtn"
+  onclick="showSayHi(event)"
+>
   Say Hi <span class="icon">👋</span>
 </button>
+
       </nav>
     </header>
 
@@ -872,6 +912,7 @@ nav a,
             I like building things, learning new stuff, and mixing creativity with tech.
             This page is a small snapshot of who I am and what I’m working on.
           </p>
+          <p id="welcomeMessage" class="hero-subtitle"></p>
           <div class="hero-actions">
             <a href="#projects" class="primary-btn">
               View my work <span class="icon">🚀</span>
@@ -1147,6 +1188,21 @@ function showSayHi() {
     return "Hello 🌙 Thanks for stopping by!";
   }
 }
+const btn = document.getElementById("sayHiBtn");
+  if (btn.classList.contains("locked")) return;
+
+  btn.classList.add("locked", "pulse");
+
+  // ✨ Ripple glow
+  const ripple = document.createElement("span");
+  ripple.className = "glow-ripple";
+  ripple.style.left = e.offsetX + "px";
+  ripple.style.top = e.offsetY + "px";
+  btn.style.position = "relative";
+  btn.appendChild(ripple);
+
+  setTimeout(() => ripple.remove(), 700);
+
   const greeting = getGreetingByTime(); // ✅ IMPORTANT
 
   const overlay = document.getElementById("sayHiOverlay");
@@ -1279,6 +1335,35 @@ function canSendWhatsApp() {
   }
   return false;
 }
+</script>
+<script>
+(function welcomeBack() {
+  const el = document.getElementById("welcomeMessage");
+  if (!el) return;
+
+  const lastVisit = localStorage.getItem("lastVisit");
+  const now = Date.now();
+
+  if (!lastVisit) {
+    // First time visitor
+    el.textContent = "Welcome 👋 Nice to meet you!";
+  } else {
+    const diffMs = now - Number(lastVisit);
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffDays = Math.floor(diffHours / 24);
+
+    if (diffDays > 0) {
+      el.textContent = `Welcome back 👋 It's been ${diffDays} day${diffDays > 1 ? "s" : ""}!`;
+    } else if (diffHours > 0) {
+      el.textContent = `Welcome back 👋 You were here ${diffHours}h ago`;
+    } else {
+      el.textContent = "Welcome back 👋 Glad to see you again!";
+    }
+  }
+
+  // Save visit time
+  localStorage.setItem("lastVisit", now);
+})();
 </script>
 </body>
 </html>
