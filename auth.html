@@ -190,7 +190,8 @@ import {
   signInWithEmailAndPassword,
   sendEmailVerification,
   sendPasswordResetEmail,
-  signOut
+  signOut,
+  onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 /* 🔥 FIREBASE CONFIG */
@@ -325,7 +326,6 @@ forgotBtn.onclick = async () => {
   } catch (err) {
     toast(err.message);
   }
-  import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 onAuthStateChanged(auth, (user) => {
   if (user && user.emailVerified) {
