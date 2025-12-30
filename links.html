@@ -108,33 +108,134 @@ h2 {
 .logout:hover {
   background: rgba(255,255,255,0.1);
 }
+.profile {
+  text-align: center;
+  margin-bottom: 14px;
+}
+.profile img {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  border: 3px solid rgba(255,255,255,0.2);
+}
+.profile h1 {
+  margin: 10px 0 4px;
+  font-size: 1.3rem;
+}
+.profile p {
+  color: #94a3b8;
+  font-size: 0.85rem;
+}
+.link {
+  position: relative;
+  overflow: hidden;
+}
+.ripple {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: rgba(255,255,255,0.6);
+  border-radius: 50%;
+  transform: scale(0);
+  animation: ripple 0.6s ease-out;
+}
+@keyframes ripple {
+  to {
+    transform: scale(15);
+    opacity: 0;
+  }
+}
+.featured {
+  box-shadow: 0 0 25px rgba(37,211,102,0.6);
+  transform: scale(1.03);
+}
+footer {
+  text-align: center;
+  margin-top: 14px;
+  color: #64748b;
+  font-size: 0.75rem;
+}
+.sharechat::before {
+  background: linear-gradient(135deg,#ff6f00,#ff8f00);
+}
+
+.x::before {
+  background: linear-gradient(135deg,#000,#333);
+}
+
+.facebook::before {
+  background: linear-gradient(135deg,#1877f2,#145dbf);
+}
+
+.discord::before {
+  background: linear-gradient(135deg,#5865F2,#404EED);
+}
+
+.telegram::before {
+  background: linear-gradient(135deg,#229ED9,#1c7fb5);
+}
+
+.threads::before {
+  background: linear-gradient(135deg,#000,#444);
+}
 </style>
 </head>
 
 <body>
 
 <div class="card">
+  <div class="profile">
+  <img src="photo.jpg" alt="Irshad">
+  <h1>𝗪𝗲𝗹𝗰𝗼𝗺𝗲 🎉</h1>
+  <p id="greeting">Loading…</p>
+</div>
   <h2>Connect With Me</h2>
 
-  <a class="link whatsapp" href="https://wa.me/919XXXXXXXXX">
+  <a class="link whatsapp featured" href="https://wa.me/919847355952">
     <i class="ri-whatsapp-line"></i> WhatsApp
   </a>
 
-  <a class="link snapchat" href="https://snapchat.com/add/yourname">
+  <a class="link snapchat" href="https://www.snapchat.com/add/vkiomp?share_id=_Tf2SxNzs7g&locale=en-GB">
     <i class="ri-snapchat-line"></i> Snapchat
   </a>
 
-  <a class="link instagram" href="https://instagram.com/yourname">
+  <a class="link instagram" href="https://www.instagram.com/irshad_vk__omp?igsh=MWR3OXZ3bW5zMjkxeg==">
     <i class="ri-instagram-line"></i> Instagram
   </a>
 
-  <a class="link email" href="mailto:you@email.com">
+  <a class="link email" href="mailto:irshadvkiomp@gmail.com">
     <i class="ri-mail-line"></i> Email
   </a>
+<a class="link sharechat" href="https://sharechat.com/profile/vkiomp?d=n">
+  <i class="ri-share-forward-line"></i> ShareChat
+</a>
+
+<a class="link x" href="https://x.com/vkiomp">
+  <i class="ri-twitter-x-line"></i> X (Twitter)
+</a>
+
+<a class="link facebook" href="https://www.facebook.com/share/1Cot1C9aTt/">
+  <i class="ri-facebook-fill"></i> Facebook
+</a>
+
+<a class="link discord" href="https://discord.gg/y4nnEpvT">
+  <i class="ri-discord-fill"></i> Discord
+</a>
+
+<a class="link telegram" href="t.me/zehranvkomp">
+  <i class="ri-telegram-fill"></i> Telegram
+</a>
+
+<a class="link threads" href="https://www.threads.com/@irshad_vk__omp">
+  <i class="ri-threads-line"></i> Threads
+</a>
 
   <button type="button" class="logout" onclick="logout()">
   Logout
 </button>
+<footer>
+  <small>© 2025 Irshad VK • Built with ❤️</small>
+</footer>
 </div>
 
 <!-- 🔐 Firebase Auth Guard -->
@@ -157,6 +258,29 @@ h2 {
       window.location.replace("auth.html");
     }
   });
+const name = "𝐓𝐡𝐚𝐧𝐤𝐬 𝐟𝐨𝐫 𝐣𝐨𝐢𝐧𝐢𝐧𝐠 𝐮𝐬!"; // 👈 change anytime
+
+const hour = new Date().getHours();
+const greet =
+  hour < 12 ? "Good Morning ☀️" :
+  hour < 17 ? "Good Afternoon 🌤️" :
+  hour < 21 ? "Good Evening 🌆" :
+  "Good Night 🌙";
+
+const greetEl = document.getElementById("greeting");
+if (greetEl) {
+  greetEl.textContent = `${greet}, ${name} 👋`;
+}
+document.querySelectorAll(".link").forEach(btn => {
+  btn.addEventListener("click", e => {
+    const ripple = document.createElement("span");
+    ripple.className = "ripple";
+    ripple.style.left = e.offsetX + "px";
+    ripple.style.top = e.offsetY + "px";
+    btn.appendChild(ripple);
+    setTimeout(() => ripple.remove(), 600);
+  });
+});
 
   window.logout = () => signOut(auth);
 </script>
