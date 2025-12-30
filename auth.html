@@ -216,7 +216,19 @@ function toast(msg) {
   toastEl.classList.add("show");
   setTimeout(() => toastEl.classList.remove("show"), 3000);
 }
-
+function setLoading(btn, state) {
+  if (state) {
+    btn.disabled = true;
+    btn.style.opacity = "0.6";
+    btn.textContent = "Please wait...";
+  } else {
+    btn.disabled = false;
+    btn.style.opacity = "1";
+    btn.textContent = btn.closest("form").id === "loginForm"
+      ? "Login"
+      : "Create account";
+  }
+}
 /* SWITCH */
 switchBtn.onclick = () => {
   const login = !loginForm.classList.contains("hidden");
@@ -278,12 +290,21 @@ signupForm.onsubmit = async e => {
 /* RESEND */
 resendBtn.onclick = async () => {
   try {
-    const user = await signInWithEmailAndPassword(
-      auth, signupEmail.value, signupPassword.value
-    );
-    await sendEmailVerification(user.user);
-    await signOut(auth);
-    toast("Verification email re-sent ✨");
+    const user = auth.currentUser;
+
+    if (!user) {
+      toast("Sign up again to resend verification");
+      return;
+    }
+
+    if (user.emailVerified) {
+      toast("Email already verified ✅");
+      return;
+    }
+
+    await sendEmailVerification(user);
+    toast("Verification email re-sent 📩 Check inbox/spam");
+
   } catch (err) {
     toast(err.message);
   }
