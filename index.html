@@ -745,6 +745,16 @@ button.loading::after {
         padding: 14px 14px 12px;
       }
     }
+    #welcomeMessage {
+  animation: fadeInWelcome 0.8s ease forwards;
+  opacity: 0;
+}
+
+@keyframes fadeInWelcome {
+  to {
+    opacity: 1;
+  }
+}
     /* Light mode */
 body.light {
   --bg: #f8fafc;
