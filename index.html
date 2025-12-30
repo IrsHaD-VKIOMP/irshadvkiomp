@@ -1124,19 +1124,29 @@ if (themeBtn) {
 </script>
 <script>
 function showSayHi() {
-
+  if (!canSendWhatsApp()) {
+    alert("You already said Hi 😊 Try again later.");
+    return;
+  }
   /* ⏰ Greeting */
   function getGreetingByTime() {
-    const hour = new Date().getHours();
-    const extras = ["Hope you're doing well ✨", "Nice to meet you 😊"];
-    const extra = extras[Math.floor(Math.random() * extras.length)];
+  const hour = new Date().getHours();
+  const lang = navigator.language || "en";
 
-    if (hour >= 5 && hour < 12) return `Good morning ☀️ ${extra}`;
-    if (hour >= 12 && hour < 17) return `Good afternoon 😊 ${extra}`;
-    if (hour >= 17 && hour < 21) return `Good evening 🌆 ${extra}`;
-    return `Hello 🌙 ${extra}`;
+  const isMalayalam = lang.startsWith("ml");
+
+  if (isMalayalam) {
+    if (hour >= 5 && hour < 12) return "സുപ്രഭാതം ☀️ സുഖമാണോ?";
+    if (hour >= 12 && hour < 17) return "ശുഭ ഉച്ച 🌼 സുഖമാണോ?";
+    if (hour >= 17 && hour < 21) return "സന്ധ്യാവന്ദനം 🌆 സുഖമാണോ?";
+    return "ഹലോ 🌙 സുഖമാണോ?";
+  } else {
+    if (hour >= 5 && hour < 12) return "Good morning ☀️ Hope you're doing well!";
+    if (hour >= 12 && hour < 17) return "Good afternoon 😊 Nice to meet you!";
+    if (hour >= 17 && hour < 21) return "Good evening 🌆 Hope you're well!";
+    return "Hello 🌙 Thanks for stopping by!";
   }
-
+}
   const greeting = getGreetingByTime(); // ✅ IMPORTANT
 
   const overlay = document.getElementById("sayHiOverlay");
@@ -1242,6 +1252,33 @@ const observer = new IntersectionObserver(
 );
 
 reveals.forEach(el => observer.observe(el));
+</script>
+<script>
+function typeText(text, targetId, speed = 40) {
+  const el = document.getElementById(targetId);
+  if (!el) return;
+
+  el.textContent = "";
+  let i = 0;
+
+  const interval = setInterval(() => {
+    el.textContent += text.charAt(i);
+    i++;
+    if (i >= text.length) clearInterval(interval);
+  }, speed);
+}
+</script>
+<script>
+function canSendWhatsApp() {
+  const last = localStorage.getItem("lastSayHi");
+  const now = Date.now();
+
+  if (!last || now - last > 1000 * 60 * 30) { // 30 min cooldown
+    localStorage.setItem("lastSayHi", now);
+    return true;
+  }
+  return false;
+}
 </script>
 </body>
 </html>
