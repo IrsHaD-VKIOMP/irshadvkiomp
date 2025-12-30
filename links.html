@@ -18,21 +18,19 @@
 /* 🌈 Animated Background */
 body {
   margin: 0;
-  height: 100vh;
+  min-height: 100vh;              /* ✅ allow page to grow */
   background: linear-gradient(-45deg,#020617,#1e1b4b,#312e81,#020617);
   background-size: 400% 400%;
   animation: bg 15s ease infinite;
   font-family: system-ui, sans-serif;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   color: #fff;
-}
 
-@keyframes bg {
-  0% { background-position: 0% 50% }
-  50% { background-position: 100% 50% }
-  100% { background-position: 0% 50% }
+  display: flex;
+  justify-content: center;        /* ✅ horizontal center only */
+  align-items: flex-start;        /* ✅ start from top */
+
+  padding: 40px 16px;             /* ✅ space for image */
+  overflow-y: auto;               /* ✅ enable scrolling */
 }
 
 /* 🧊 Card */
@@ -46,6 +44,7 @@ body {
   border: 1px solid var(--border);
   box-shadow: var(--glow);
   animation: fadeUp .7s ease;
+  margin-top: 20px;
 }
 
 @keyframes fadeUp {
