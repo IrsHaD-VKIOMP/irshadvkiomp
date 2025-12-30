@@ -163,18 +163,21 @@ form.hidden {
     <input id="loginEmail" type="email" placeholder="Email" required>
     <input id="loginPassword" type="password" placeholder="Password" required>
     <div class="link" id="forgotBtn">Forgot password?</div>
-    <button>Login</button>
+    <button type="submit">Login</button>
+
   </form>
 
   <!-- SIGNUP -->
   <form id="signupForm" class="hidden">
     <input id="signupEmail" type="email" placeholder="Email" required>
     <input id="signupPassword" type="password" placeholder="Password (min 6)" required>
-    <button>Create account</button>
+    <button type="submit">Create account</button>
     <button type="button" class="secondary" id="resendBtn">Resend verification email</button>
   </form>
 
-  <button class="secondary" id="switchBtn">Go to Sign up</button>
+  <button type="button" class="secondary" id="switchBtn">
+  Go to Sign up
+</button>
 </div>
 
 <div id="toast"></div>
