@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>My Links</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Icons -->
+<link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+
+<style>
+:root {
+  --glass: rgba(255,255,255,0.08);
+  --border: rgba(255,255,255,0.15);
+  --glow: 0 0 25px rgba(124,58,237,0.5);
+}
+
+/* 🌈 Animated Background */
+body {
+  margin: 0;
+  height: 100vh;
+  background: linear-gradient(-45deg,#020617,#1e1b4b,#312e81,#020617);
+  background-size: 400% 400%;
+  animation: bg 15s ease infinite;
+  font-family: system-ui, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+
+@keyframes bg {
+  0% { background-position: 0% 50% }
+  50% { background-position: 100% 50% }
+  100% { background-position: 0% 50% }
+}
+
+/* 🧊 Card */
+.card {
+  width: 100%;
+  max-width: 380px;
+  padding: 24px;
+  border-radius: 18px;
+  background: var(--glass);
+  backdrop-filter: blur(18px);
+  border: 1px solid var(--border);
+  box-shadow: var(--glow);
+  animation: fadeUp .7s ease;
+}
+
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(20px) }
+  to { opacity:1; transform:translateY(0) }
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* 🔘 Buttons */
+.link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 14px;
+  margin-bottom: 14px;
+  border-radius: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+  transition: transform .2s ease;
+}
+
+.link::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: .85;
+  z-index: -1;
+}
+
+/* Individual Colors */
+.whatsapp::before { background: linear-gradient(135deg,#25d366,#128c7e); }
+.snapchat::before { background: linear-gradient(135deg,#fffc00,#ffcc00); color:#000 }
+.instagram::before { background: linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045); }
+.email::before { background: linear-gradient(135deg,#3b82f6,#1e40af); }
+
+.link:hover {
+  transform: scale(1.05);
+}
+
+/* Logout */
+.logout {
+  margin-top: 18px;
+  background: transparent;
+  border: 1px solid var(--border);
+  padding: 12px;
+  width: 100%;
+  border-radius: 12px;
+  color: #94a3b8;
+  cursor: pointer;
+}
+
+.logout:hover {
+  background: rgba(255,255,255,0.1);
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+  <h2>Connect With Me</h2>
+
+  <a class="link whatsapp" href="https://wa.me/919XXXXXXXXX">
+    <i class="ri-whatsapp-line"></i> WhatsApp
+  </a>
+
+  <a class="link snapchat" href="https://snapchat.com/add/yourname">
+    <i class="ri-snapchat-line"></i> Snapchat
+  </a>
+
+  <a class="link instagram" href="https://instagram.com/yourname">
+    <i class="ri-instagram-line"></i> Instagram
+  </a>
+
+  <a class="link email" href="mailto:you@email.com">
+    <i class="ri-mail-line"></i> Email
+  </a>
+
+  <button class="logout" onclick="logout()">Logout</button>
+</div>
+
+<!-- 🔐 Firebase Auth Guard -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    appId: "YOUR_APP_ID"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  onAuthStateChanged(auth, (user) => {
+    if (!user) {
+      window.location.replace("auth.html");
+    }
+  });
+
+  window.logout = () => signOut(auth);
+</script>
+
+</body>
+</html>
