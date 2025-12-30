@@ -900,9 +900,11 @@ nav a,
   type="button"
   class="primary-btn"
   id="sayHiBtn"
+  onclick="showSayHi()"
 >
   Say Hi <span class="icon">👋</span>
 </button>
+
 
       </nav>
     </header>
@@ -1175,83 +1177,60 @@ if (themeBtn) {
 </script>
 <script>
 function showSayHi() {
-  if (!canSendWhatsApp()) {
-    alert("You already said Hi 😊 Try again later.");
-    return;
-  }
-  /* ⏰ Greeting */
-  function getGreetingByTime() {
-  const hour = new Date().getHours();
-  const lang = navigator.language || "en";
-
-  const isMalayalam = lang.startsWith("ml");
-
-  if (isMalayalam) {
-    if (hour >= 5 && hour < 12) return "സുപ്രഭാതം ☀️ സുഖമാണോ?";
-    if (hour >= 12 && hour < 17) return "ശുഭ ഉച്ച 🌼 സുഖമാണോ?";
-    if (hour >= 17 && hour < 21) return "സന്ധ്യാവന്ദനം 🌆 സുഖമാണോ?";
-    return "ഹലോ 🌙 സുഖമാണോ?";
-  } else {
-    if (hour >= 5 && hour < 12) return "Good morning ☀️ Hope you're doing well!";
-    if (hour >= 12 && hour < 17) return "Good afternoon 😊 Nice to meet you!";
-    if (hour >= 17 && hour < 21) return "Good evening 🌆 Hope you're well!";
-    return "Hello 🌙 Thanks for stopping by!";
-  }
-}
-const btn = document.getElementById("sayHiBtn");
-  if (btn.classList.contains("locked")) return;
-
-  btn.classList.add("locked", "pulse");
-
-  // ✨ Ripple glow
-  const ripple = document.createElement("span");
-  ripple.className = "glow-ripple";
-  ripple.style.left = e.offsetX + "px";
-  ripple.style.top = e.offsetY + "px";
-  btn.style.position = "relative";
-  btn.appendChild(ripple);
-
-  setTimeout(() => ripple.remove(), 700);
-
-  const greeting = getGreetingByTime(); // ✅ IMPORTANT
-
+  const btn = document.getElementById("sayHiBtn");
   const overlay = document.getElementById("sayHiOverlay");
   const textEl = document.getElementById("typingText");
 
-  overlay.classList.add("show");
+  // Prevent spam clicks
+  if (btn.classList.contains("loading")) return;
+  btn.classList.add("loading");
 
+  // ⏰ Greeting by time + language
+  const hour = new Date().getHours();
+  const lang = navigator.language || "en";
+  const isMalayalam = lang.startsWith("ml");
+
+  let greeting = "Hello 🌙 Thanks for stopping by!";
+
+  if (isMalayalam) {
+    if (hour >= 5 && hour < 12) greeting = "സുപ്രഭാതം ☀️ സുഖമാണോ?";
+    else if (hour >= 12 && hour < 17) greeting = "ശുഭ ഉച്ച 🌼 സുഖമാണോ?";
+    else if (hour >= 17 && hour < 21) greeting = "സന്ധ്യാവന്ദനം 🌆 സുഖമാണോ?";
+    else greeting = "ഹലോ 🌙 സുഖമാണോ?";
+  } else {
+    if (hour >= 5 && hour < 12) greeting = "Good morning ☀️ Hope you're doing well!";
+    else if (hour >= 12 && hour < 17) greeting = "Good afternoon 😊 Nice to meet you!";
+    else if (hour >= 17 && hour < 21) greeting = "Good evening 🌆 Hope you're well!";
+  }
+
+  // Show overlay
+  overlay.classList.add("show");
   playHiSound();
   vibrateHi();
 
-  // ✍️ show greeting
   if (textEl) textEl.textContent = greeting;
 
-  // ⏳ change text before redirect
   setTimeout(() => {
     if (textEl) textEl.textContent = "Opening WhatsApp…";
   }, 700);
 
-  // 📲 redirect
   setTimeout(() => {
     overlay.classList.remove("show");
-    openWhatsAppSmart(greeting);
-  }, 1800);
-}
+    btn.classList.remove("loading");
 
-/* 📲 WhatsApp smart open */
-function openWhatsAppSmart(greeting) {
-  const message = encodeURIComponent(
-    `${greeting} Irshad 👋 I just visited your website!`
-  );
+    const message = encodeURIComponent(
+      `${greeting} Irshad 👋 I just visited your website!`
+    );
 
-  const phone = "919847355952";
-  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    const phone = "919847355952";
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
-  const url = isMobile
-    ? `https://wa.me/${phone}?text=${message}`
-    : `https://web.whatsapp.com/send?phone=${phone}&text=${message}`;
+    const url = isMobile
+      ? `https://wa.me/${phone}?text=${message}`
+      : `https://web.whatsapp.com/send?phone=${phone}&text=${message}`;
 
-  window.location.href = url;
+    window.open(url, "_blank");
+  }, 1600);
 }
 </script>
 <script>
@@ -1332,18 +1311,6 @@ function typeText(text, targetId, speed = 40) {
     i++;
     if (i >= text.length) clearInterval(interval);
   }, speed);
-}
-</script>
-<script>
-function canSendWhatsApp() {
-  const last = localStorage.getItem("lastSayHi");
-  const now = Date.now();
-
-  if (!last || now - last > 1000 * 60 * 30) { // 30 min cooldown
-    localStorage.setItem("lastSayHi", now);
-    return true;
-  }
-  return false;
 }
 </script>
 <script>
