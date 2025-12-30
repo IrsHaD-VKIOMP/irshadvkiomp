@@ -1176,7 +1176,41 @@ if (themeBtn) {
 }
 </script>
 <script>
+const WHATSAPP_COOLDOWN_MINUTES = 30; // ⏳ change this anytime
+</script>
+<script>
+function canSendWhatsApp() {
+  const last = localStorage.getItem("lastWhatsAppTime");
+  if (!last) return true;
+
+  const diff = Date.now() - Number(last);
+  const limit = WHATSAPP_COOLDOWN_MINUTES * 60 * 1000;
+
+  return diff >= limit;
+}
+
+function remainingTime() {
+  const last = localStorage.getItem("lastWhatsAppTime");
+  if (!last) return 0;
+
+  const diff = Date.now() - Number(last);
+  const limit = WHATSAPP_COOLDOWN_MINUTES * 60 * 1000;
+
+  return Math.ceil((limit - diff) / 60000);
+}
+</script>
+<script>
 function showSayHi() {
+  // ⛔ Timer check
+  if (!canSendWhatsApp()) {
+    const mins = remainingTime();
+    alert(`You already said Hi 😊\nTry again in ${mins} minute(s).`);
+    return;
+  }
+
+  // Save click time
+  localStorage.setItem("lastWhatsAppTime", Date.now());
+
   const btn = document.getElementById("sayHiBtn");
   const overlay = document.getElementById("sayHiOverlay");
   const textEl = document.getElementById("typingText");
