@@ -1092,6 +1092,22 @@ nav a,
 
   <!-- Firebase auth, login/signup, verification, reset, show/hide password -->
 <div id="toast"></div>
+<div id="iosHint" style="
+  position: fixed;
+  bottom: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(2,6,23,0.95);
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 14px;
+  font-size: 0.8rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+  display: none;
+  z-index: 9999;
+">
+  If WhatsApp doesn’t open, tap <b>Open in WhatsApp</b>
+</div>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
@@ -1200,6 +1216,12 @@ function remainingTime() {
 }
 </script>
 <script>
+function isIOSInstagram() {
+  const ua = navigator.userAgent || navigator.vendor || window.opera;
+  return /iPhone|iPad|iPod/i.test(ua) && /Instagram/i.test(ua);
+}
+</script>
+<script>
 function showSayHi() {
   // ⛔ Timer check
   if (!canSendWhatsApp()) {
@@ -1207,6 +1229,8 @@ function showSayHi() {
     alert(`You already said Hi 😊\nTry again in ${mins} minute(s).`);
     return;
   }
+if (document.body.classList.contains("whatsapp-opening")) return;
+document.body.classList.add("whatsapp-opening");
 
   // Save click time
   localStorage.setItem("lastWhatsAppTime", Date.now());
@@ -1264,11 +1288,26 @@ function showSayHi() {
       ? `https://wa.me/${phone}?text=${message}`
       : `https://web.whatsapp.com/send?phone=${phone}&text=${message}`;
 
-    // ✅ WORKS IN INSTAGRAM iOS
+
+    const isIOSInstagramUser = isIOSInstagram();
+
+  if (isIOS && isInstagram) {
+  const hint = document.getElementById("iosHint");
+  if (hint) {
+    hint.style.display = "block";
+    setTimeout(() => hint.style.display = "none", 4000);
+  }
+}
+
+    
+      // ✅ WORKS IN INSTAGRAM iOS
     window.location.href = url;
 
   }, 1200);
 }
+setTimeout(() => {
+  document.body.classList.remove("whatsapp-opening");
+}, 2000);
 </script>
 <script>
 function vibrateHi() {
