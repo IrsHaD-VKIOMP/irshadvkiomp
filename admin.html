@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+  body {
+    font-family: system-ui, sans-serif;
+    background: radial-gradient(circle at top, #1e293b, #020617 60%);
+    color: #f9fafb;
+    padding: 24px;
+  }
+
+  h1 {
+    font-size: 1.4rem;
+    margin-bottom: 6px;
+  }
+
+  .muted {
+    color: #94a3b8;
+    font-size: 0.85rem;
+    margin-bottom: 20px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+  }
+
+  .card {
+    background: rgba(15,23,42,0.95);
+    border: 1px solid rgba(148,163,184,0.25);
+    border-radius: 18px;
+    padding: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+  }
+
+  .card h3 {
+    font-size: 0.85rem;
+    color: #a5b4fc;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .stat {
+    display: flex;
+    justify-content: space-between;
+    margin: 6px 0;
+    font-size: 0.9rem;
+  }
+
+  .stat b {
+    font-weight: 600;
+  }
+
+  button {
+    margin-top: 20px;
+    padding: 10px 18px;
+    border-radius: 14px;
+    border: none;
+    cursor: pointer;
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    color: #fff;
+    font-size: 0.85rem;
+  }
+</style>
+</head>
+<body>
+
+<h1>📊 Admin Analytics</h1>
+<p class="muted">Visible only to you</p>
+
+<div id="dashboard" style="display:none" class="grid">
+  <div class="card">
+  <h3>Visits</h3>
+  <div class="stat"><span>Total</span><b id="visits">–</b></div>
+  <div class="stat"><span>Returning</span><b id="returning">–</b></div>
+</div>
+
+<div class="card">
+  <h3>Devices</h3>
+  <div class="stat"><span>Mobile</span><b id="mobile">–</b></div>
+  <div class="stat"><span>Desktop</span><b id="desktop">–</b></div>
+</div>
+
+<div class="card">
+  <h3>Buttons</h3>
+  <div id="buttons"></div>
+</div>
+
+  <button onclick="resetAnalytics()">Reset Analytics</button>
+</div>
+
+<p id="blocked" class="muted">Checking authentication…</p>
+
+<!-- Firebase -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDr3YpouSddKSR-9PqKPHDSP1qfwNv-VBM",
+  authDomain: "irshad-website.firebaseapp.com",
+  projectId: "irshad-website",
+  appId: "1:513828028182:web:ceca5d1ac390d5ec731a37"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+const ADMIN_EMAIL = "irshadvkiomp@gmail.com";
+
+onAuthStateChanged(auth, user => {
+  if (user && user.emailVerified && user.email === ADMIN_EMAIL) {
+    document.getElementById("dashboard").style.display = "block";
+    document.getElementById("blocked").style.display = "none";
+    loadAnalytics();
+  } else {
+    window.location.href = "auth.html";
+  }
+});
+</script>
+
+<!-- Analytics Reader -->
+<script>
+function loadAnalytics() {
+  const data = JSON.parse(localStorage.getItem("pf_analytics"));
+  if (!data) return;
+
+  document.getElementById("visits").textContent = data.visits || 0;
+  document.getElementById("returning").textContent = data.returning || 0;
+  document.getElementById("mobile").textContent = data.device?.mobile || 0;
+  document.getElementById("desktop").textContent = data.device?.desktop || 0;
+
+  const buttonsDiv = document.getElementById("buttons");
+  buttonsDiv.innerHTML = "<b>Button clicks</b>";
+
+  for (const key in data.buttons) {
+    const div = document.createElement("div");
+    div.className = "stat";
+    div.innerHTML = `<span>${key}</span><b>${data.buttons[key]}</b>`;
+    buttonsDiv.appendChild(div);
+  }
+}
+
+function resetAnalytics() {
+  if (confirm("Reset analytics data?")) {
+    localStorage.removeItem("pf_analytics");
+    location.reload();
+  }
+}
+</script>
+
+</body>
+</html>
