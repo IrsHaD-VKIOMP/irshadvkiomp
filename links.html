@@ -177,11 +177,25 @@ footer {
 .threads::before {
   background: linear-gradient(135deg,#000,#444);
 }
+.admin-btn {
+  display: none;
+  margin: 16px auto;
+  padding: 14px 18px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  text-align: center;
+  max-width: 260px;
+}
 </style>
 </head>
 
 <body>
-
+<a id="adminBtn" href="admin.html" class="admin-btn">
+  📊 Admin Dashboard
+</a>
 <div class="card">
   <div class="profile">
   <img src="photo.jpg" alt="Irshad">
@@ -248,15 +262,27 @@ footer {
   projectId: "irshad-website",
   appId: "1:513828028182:web:ceca5d1ac390d5ec731a37"
 };
+const ADMIN_EMAIL = "irshadvkiomp@gmail.com";
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
 
-  onAuthStateChanged(auth, (user) => {
-    if (!user) {
-      window.location.replace("auth.html");
-    }
-  });
+ onAuthStateChanged(auth, (user) => {
+  const adminBtn = document.getElementById("adminBtn");
+
+  // Not logged in → go to auth
+  if (!user) {
+    window.location.replace("auth.html");
+    return;
+  }
+
+  // Logged in + verified + admin email
+  if (user.emailVerified && user.email === ADMIN_EMAIL) {
+    adminBtn.style.display = "block";
+  } else {
+    adminBtn.style.display = "none";
+  }
+});
 const name = "𝐓𝐡𝐚𝐧𝐤𝐬 𝐟𝐨𝐫 𝐣𝐨𝐢𝐧𝐢𝐧𝐠 𝐮𝐬!"; // 👈 change anytime
 
 const hour = new Date().getHours();
