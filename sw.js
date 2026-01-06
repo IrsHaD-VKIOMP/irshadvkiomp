@@ -1,18 +1,25 @@
-const CACHE_NAME = "irshad-site-v1";
+/* ===============================
+   Simple Offline Service Worker
+================================ */
 
-const OFFLINE_ASSETS = [
+const CACHE_NAME = "irshad-offline-v1";
+
+const OFFLINE_FILES = [
   "./",
   "./index.html",
-  "./manifest.json"
+  "./manifest.json",
+  "./icon-192.png",
+  "./icon-512.png"
 ];
 
 // Install
 self.addEventListener("install", event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
-      return cache.addAll(OFFLINE_ASSETS);
+      return cache.addAll(OFFLINE_FILES);
     })
   );
+  self.skipWaiting();
 });
 
 // Activate
@@ -28,6 +35,7 @@ self.addEventListener("activate", event => {
       )
     )
   );
+  self.clients.claim();
 });
 
 // Fetch
