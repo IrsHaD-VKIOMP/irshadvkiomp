@@ -1092,22 +1092,6 @@ nav a,
 
   <!-- Firebase auth, login/signup, verification, reset, show/hide password -->
 <div id="toast"></div>
-<div id="iosHint" style="
-  position: fixed;
-  bottom: 22px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(2,6,23,0.95);
-  color: #fff;
-  padding: 10px 16px;
-  border-radius: 14px;
-  font-size: 0.8rem;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-  display: none;
-  z-index: 9999;
-">
-  If WhatsApp doesn’t open, tap <b>Open in WhatsApp</b>
-</div>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
@@ -1216,12 +1200,6 @@ function remainingTime() {
 }
 </script>
 <script>
-function isIOSInstagram() {
-  const ua = navigator.userAgent || navigator.vendor || window.opera;
-  return /iPhone|iPad|iPod/i.test(ua) && /Instagram/i.test(ua);
-}
-</script>
-<script>
 function showSayHi() {
   // ⛔ Timer check
   if (!canSendWhatsApp()) {
@@ -1229,8 +1207,6 @@ function showSayHi() {
     alert(`You already said Hi 😊\nTry again in ${mins} minute(s).`);
     return;
   }
-if (document.body.classList.contains("whatsapp-opening")) return;
-document.body.classList.add("whatsapp-opening");
 
   // Save click time
   localStorage.setItem("lastWhatsAppTime", Date.now());
@@ -1239,10 +1215,11 @@ document.body.classList.add("whatsapp-opening");
   const overlay = document.getElementById("sayHiOverlay");
   const textEl = document.getElementById("typingText");
 
+  // Prevent spam clicks
   if (btn.classList.contains("loading")) return;
   btn.classList.add("loading");
 
-  // ⏰ Greeting
+  // ⏰ Greeting by time + language
   const hour = new Date().getHours();
   const lang = navigator.language || "en";
   const isMalayalam = lang.startsWith("ml");
@@ -1260,19 +1237,17 @@ document.body.classList.add("whatsapp-opening");
     else if (hour >= 17 && hour < 21) greeting = "Good evening 🌆 Hope you're well!";
   }
 
-  // 🔊 AUDIO (must be immediate)
+  // Show overlay
+  overlay.classList.add("show");
   playHiSound();
   vibrateHi();
 
-  // 🎭 UI
-  overlay.classList.add("show");
   if (textEl) textEl.textContent = greeting;
 
   setTimeout(() => {
     if (textEl) textEl.textContent = "Opening WhatsApp…";
-  }, 600);
+  }, 700);
 
-  // 📲 REDIRECT (iOS SAFE)
   setTimeout(() => {
     overlay.classList.remove("show");
     btn.classList.remove("loading");
@@ -1288,26 +1263,9 @@ document.body.classList.add("whatsapp-opening");
       ? `https://wa.me/${phone}?text=${message}`
       : `https://web.whatsapp.com/send?phone=${phone}&text=${message}`;
 
-
-    const isIOSInstagramUser = isIOSInstagram();
-
-  if (isIOS && isInstagram) {
-  const hint = document.getElementById("iosHint");
-  if (hint) {
-    hint.style.display = "block";
-    setTimeout(() => hint.style.display = "none", 4000);
-  }
+    window.open(url, "_blank");
+  }, 1600);
 }
-
-    
-      // ✅ WORKS IN INSTAGRAM iOS
-    window.location.href = url;
-
-  }, 1200);
-}
-setTimeout(() => {
-  document.body.classList.remove("whatsapp-opening");
-}, 2000);
 </script>
 <script>
 function vibrateHi() {
@@ -1330,34 +1288,31 @@ function typeText(text, elementId, speed = 45) {
 }
 </script>
 <script>
-let audioCtx;
-
 function playHiSound() {
-  if (!audioCtx) {
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  }
+  const ctx = new (window.AudioContext || window.webkitAudioContext)();
 
-  if (audioCtx.state === "suspended") {
-    audioCtx.resume();
-  }
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
 
-  const osc = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
+  osc.type = "triangle";
 
-  osc.type = "sine";
-  osc.frequency.value = 660;
+  osc.frequency.setValueAtTime(520, ctx.currentTime);
+  osc.frequency.exponentialRampToValueAtTime(
+    880,
+    ctx.currentTime + 0.18
+  );
 
-  gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+  gain.gain.setValueAtTime(0.18, ctx.currentTime);
   gain.gain.exponentialRampToValueAtTime(
     0.001,
-    audioCtx.currentTime + 0.35
+    ctx.currentTime + 0.45
   );
 
   osc.connect(gain);
-  gain.connect(audioCtx.destination);
+  gain.connect(ctx.destination);
 
   osc.start();
-  osc.stop(audioCtx.currentTime + 0.35);
+  osc.stop(ctx.currentTime + 0.45);
 }
 </script>
 <script>
