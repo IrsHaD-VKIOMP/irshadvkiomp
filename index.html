@@ -4,6 +4,9 @@
   <meta charset="UTF-8" />
   <title>irshadvkiomp</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <meta name="theme-color" content="#4f46e5">
   <style>
     #toast {
   position: fixed;
@@ -1092,6 +1095,22 @@ nav a,
 
   <!-- Firebase auth, login/signup, verification, reset, show/hide password -->
 <div id="toast"></div>
+<div id="iosHint" style="
+  position: fixed;
+  bottom: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(2,6,23,0.95);
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 14px;
+  font-size: 0.8rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+  display: none;
+  z-index: 9999;
+">
+  If WhatsApp doesn’t open, tap <b>Open in WhatsApp</b>
+</div>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
@@ -1180,93 +1199,90 @@ const WHATSAPP_COOLDOWN_MINUTES = 30; // ⏳ change this anytime
 </script>
 <script>
 function canSendWhatsApp() {
-  const last = localStorage.getItem("lastWhatsAppTime");
-  if (!last) return true;
-
-  const diff = Date.now() - Number(last);
-  const limit = WHATSAPP_COOLDOWN_MINUTES * 60 * 1000;
-
-  return diff >= limit;
+  return true; // 🔓 timer disabled for now
 }
 
 function remainingTime() {
-  const last = localStorage.getItem("lastWhatsAppTime");
-  if (!last) return 0;
-
-  const diff = Date.now() - Number(last);
-  const limit = WHATSAPP_COOLDOWN_MINUTES * 60 * 1000;
-
-  return Math.ceil((limit - diff) / 60000);
+  return 0;
+}
+</script>
+<script>
+if (isIOSInstagram()) {
+  const hint = document.getElementById("iosHint");
+  if (hint) {
+    hint.style.display = "block";
+    setTimeout(() => hint.style.display = "none", 4000);
+  }
 }
 </script>
 <script>
 function showSayHi() {
-  // ⛔ Timer check
-  if (!canSendWhatsApp()) {
-    const mins = remainingTime();
-    alert(`You already said Hi 😊\nTry again in ${mins} minute(s).`);
-    return;
-  }
-
-  // Save click time
-  localStorage.setItem("lastWhatsAppTime", Date.now());
-
   const btn = document.getElementById("sayHiBtn");
-  const overlay = document.getElementById("sayHiOverlay");
-  const textEl = document.getElementById("typingText");
-
-  // Prevent spam clicks
-  if (btn.classList.contains("loading")) return;
+  if (!btn || btn.classList.contains("loading")) return;
   btn.classList.add("loading");
 
-  // ⏰ Greeting by time + language
+  // 📊 Analytics (safe)
+  if (window.PFAnalytics) {
+    try {
+      PFAnalytics.trackButton("sayHi");
+    } catch (e) {}
+  }
+
+  // ⏰ Greeting
   const hour = new Date().getHours();
   const lang = navigator.language || "en";
   const isMalayalam = lang.startsWith("ml");
 
-  let greeting = "Hello 🌙 Thanks for stopping by!";
+  let greeting = "Hello 👋";
 
   if (isMalayalam) {
     if (hour >= 5 && hour < 12) greeting = "സുപ്രഭാതം ☀️ സുഖമാണോ?";
-    else if (hour >= 12 && hour < 17) greeting = "ശുഭ ഉച്ച 🌼 സുഖമാണോ?";
-    else if (hour >= 17 && hour < 21) greeting = "സന്ധ്യാവന്ദനം 🌆 സുഖമാണോ?";
+    else if (hour < 17) greeting = "ശുഭ ഉച്ച 🌼 സുഖമാണോ?";
+    else if (hour < 21) greeting = "സന്ധ്യാവന്ദനം 🌆 സുഖമാണോ?";
     else greeting = "ഹലോ 🌙 സുഖമാണോ?";
   } else {
-    if (hour >= 5 && hour < 12) greeting = "Good morning ☀️ Hope you're doing well!";
-    else if (hour >= 12 && hour < 17) greeting = "Good afternoon 😊 Nice to meet you!";
-    else if (hour >= 17 && hour < 21) greeting = "Good evening 🌆 Hope you're well!";
+    if (hour >= 5 && hour < 12) greeting = "Good morning ☀️";
+    else if (hour < 17) greeting = "Good afternoon 😊";
+    else greeting = "Good evening 🌆";
   }
 
-  // Show overlay
-  overlay.classList.add("show");
+  // 🔊 Audio + vibration (sync)
   playHiSound();
   vibrateHi();
 
-  if (textEl) textEl.textContent = greeting;
+  // 🎭 UI (moved to separate file)
+  const allowed = window.showSayHiUI ? showSayHiUI(greeting) : true;
+if (!allowed) return;
 
-  setTimeout(() => {
-    if (textEl) textEl.textContent = "Opening WhatsApp…";
-  }, 700);
+  // 📲 WhatsApp URL (IMMEDIATE)
+  const message = encodeURIComponent(
+    `${greeting} Irshad 👋 I just visited your website!`
+  );
 
+  const phone = "919847355952";
+  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+  const url = isMobile
+    ? `https://wa.me/${phone}?text=${message}`
+    : `https://web.whatsapp.com/send?phone=${phone}&text=${message}`;
+
+  // 📊 Analytics
+  if (window.PFAnalytics) {
+    try {
+      PFAnalytics.trackButton("whatsapp");
+    } catch (e) {}
+  }
+
+  // 🚀 Redirect (direct user action)
+  window.location.href = url;
+
+  // 🧹 Safety cleanup if redirect fails
   setTimeout(() => {
-    overlay.classList.remove("show");
     btn.classList.remove("loading");
-
-    const message = encodeURIComponent(
-      `${greeting} Irshad 👋 I just visited your website!`
-    );
-
-    const phone = "919847355952";
-    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-
-    const url = isMobile
-      ? `https://wa.me/${phone}?text=${message}`
-      : `https://web.whatsapp.com/send?phone=${phone}&text=${message}`;
-
-    window.open(url, "_blank");
-  }, 1600);
+  }, 1500);
 }
 </script>
+<script src="sayhi-ui.js"></script>
 <script>
 function vibrateHi() {
   if ("vibrate" in navigator) {
@@ -1288,31 +1304,34 @@ function typeText(text, elementId, speed = 45) {
 }
 </script>
 <script>
+let audioCtx;
+
 function playHiSound() {
-  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
 
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
+  if (audioCtx.state === "suspended") {
+    audioCtx.resume();
+  }
 
-  osc.type = "triangle";
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
 
-  osc.frequency.setValueAtTime(520, ctx.currentTime);
-  osc.frequency.exponentialRampToValueAtTime(
-    880,
-    ctx.currentTime + 0.18
-  );
+  osc.type = "sine";
+  osc.frequency.value = 660;
 
-  gain.gain.setValueAtTime(0.18, ctx.currentTime);
+  gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
   gain.gain.exponentialRampToValueAtTime(
     0.001,
-    ctx.currentTime + 0.45
+    audioCtx.currentTime + 0.35
   );
 
   osc.connect(gain);
-  gain.connect(ctx.destination);
+  gain.connect(audioCtx.destination);
 
   osc.start();
-  osc.stop(ctx.currentTime + 0.45);
+  osc.stop(audioCtx.currentTime + 0.35);
 }
 </script>
 <script>
@@ -1375,6 +1394,14 @@ function typeText(text, targetId, speed = 40) {
   // Save visit time
   localStorage.setItem("lastVisit", now);
 })();
+</script>
+<script src="analytics.js"></script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js");
+  });
+}
 </script>
 </body>
 </html>
