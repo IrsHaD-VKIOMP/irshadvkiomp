@@ -862,9 +862,51 @@ nav a,
     opacity: 0;
   }
 }
+/* ✅ Language button */
+.lang-btn{
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+/* ✅ Mobile header fix */
+@media (max-width: 640px) {
+  header {
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
+  nav a {
+    white-space: nowrap;  /* ✅ keep About Skills Contact in one line */
+  }
+}
+@media (max-width: 640px) {
+  .hero-actions {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    width: 100% !important;
+  }
+
+  .hero-actions .primary-btn,
+  .hero-actions .ghost-btn {
+    width: 100% !important;
+    justify-content: center !important;
+    text-align: center !important;
+  }
+}
   </style>
 </head>
 <body>
+
   <!-- SAY HI OVERLAY -->
 <div id="sayHiOverlay">
   <div class="say-hi-card">
@@ -890,6 +932,9 @@ nav a,
         <a href="#skills">Skills</a>
         <a href="#projects">Work</a>
         <a href="#contact">Contact</a>
+        <button id="langToggle" class="ghost-btn lang-btn" title="Change language">
+  🌐 ML
+</button>
         <a
   href="auth.html"
   class="primary-btn"
@@ -915,32 +960,46 @@ nav a,
     <main>
       <!-- HERO -->
       <section class="hero fade-up">
-        <div>
-          <div class="hero-badge">
-            <span> Personal Creative Website</span>
-          </div>
-          <h1 class="hero-title">
-            Hi, I’m <span class="accent">MOHAMMED IRSHAD VK</span> <br />
-            and this is my little corner on the internet.
-          </h1>
-          <p class="hero-subtitle">
-            I like building things, learning new stuff, and mixing creativity with tech.
-            This page is a small snapshot of who I am and what I’m working on.
-          </p>
-          <p id="welcomeMessage" class="hero-subtitle"></p>
-          <div class="hero-actions">
-            <a href="#projects" class="primary-btn">
-              View my work <span class="icon">🚀</span>
-            </a>
-            <a href="#about" class="ghost-btn">
-              More about me <span class="icon">➜</span>
-            </a>
-          </div>
-          <div class="hero-meta">
-            <span><span class="hero-meta-dot"></span> Open for collabs & ideas</span>
-            <span><span class="hero-meta-dot"></span> Based on Planet Earth 🌍</span>
-          </div>
-        </div>
+  <!-- LEFT COLUMN -->
+  <div>
+    <div class="hero-badge">
+      <span data-i18n="hero_badge">Personal Creative Website</span>
+    </div>
+
+    <h1 class="hero-title">
+  <span data-i18n="hero_title_1">Hi, I’m</span>
+  <span class="accent">MOHAMMED IRSHAD VK</span><br />
+  <span data-i18n="hero_title_2">
+    and this is my little corner on the internet.
+  </span>
+</h1>
+
+
+    <p class="hero-subtitle" data-i18n="hero_subtitle"></p>
+
+    <p id="welcomeMessage" class="hero-subtitle"></p>
+
+    <div class="hero-actions">
+      <a href="#projects" class="primary-btn" data-i18n="hero_btn_work">
+        View my work 🚀
+      </a>
+      <a href="#about" class="ghost-btn" data-i18n="hero_btn_about">
+        More about me ➜
+      </a>
+    </div>
+
+    <div class="hero-meta">
+      <span>
+  <span class="hero-meta-dot"></span>
+  <span data-i18n="dot_1">Open for collabs & ideas</span>
+</span>
+
+<span>
+  <span class="hero-meta-dot"></span>
+  <span data-i18n="dot_2">Based on Planet Earth 🌍</span>
+</span>
+    </div>
+  </div>
 
         <aside class="hero-card">
           <div class="hero-card-header">
@@ -950,25 +1009,24 @@ nav a,
        onerror="this.style.display='none'; this.parentElement.innerHTML='🧑‍💻';"
        style="width:100%;height:100%;border-radius:20px;object-fit:cover;">
 </div>
-
               <div class="hero-name-block">
-                <span class="label">Profile</span>
+                <span class="label" data-i18n="profile_label">Profile</span>
                 <h2>MOHAMMED IRSHAD VK</h2>
               </div>
             </div>
-            <div class="hero-tag-chip">
-              Creating · Learning · Sharing
-            </div>
+            <div class="hero-tag-chip" data-i18n="hero_tag">
+            Creating · Learning · Sharing
+          </div>
           </div>
           <div class="hero-card-body">
-            <p>
-              I’m curious about technology, design, and how ideas can turn into real
-              things on a screen. This website is always under construction – just like me.
-            </p>
+            <p data-i18n="hero_card_text">
+            I’m curious about technology, design, and how ideas can turn into real
+            things on a screen. This website is always under construction – just like me.
+          </p>
             <div class="hero-pill-row">
-              <span class="hero-pill">Web Experiments</span>
-              <span class="hero-pill">Music / Art / Writing</span>
-              <span class="hero-pill">Self-learning mode: ON</span>
+              <span class="hero-pill" data-i18n="pill_1">Web Experiments</span>
+              <span class="hero-pill" data-i18n="pill_2">Music / Art / Writing</span>
+              <span class="hero-pill" data-i18n="pill_3">Self-learning mode: ON</span>
             </div>
             <div class="stat-row">
               <div class="stat">
@@ -995,21 +1053,22 @@ nav a,
       <!-- ABOUT -->
       <section id="about" class="reveal">
         <div class="section-header">
-          <h2 class="section-title">About me</h2>
-          <p class="section-subtitle">A quick snapshot of who I am.</p>
+          <h2 class="section-title" data-i18n="about_title">About me</h2>
+        <p class="section-subtitle" data-i18n="about_subtitle">
+          A quick snapshot of who I am.
+        </p>
         </div>
         <div class="about-card">
-          <p>
-            I’m someone who enjoys exploring ideas, tools, and new skills.
-            Instead of waiting for the “perfect moment”, I like to start small,
-            experiment, and improve as I go.
-          </p>
-          <p>
-            I created this website as my personal space – a place to show what
-            I’m learning, what I’m building, and what I care about. Over time,
-            this page will change, just like I do.
-          </p>
-          <p>
+                  <p data-i18n="about_p1">
+          I’m someone who enjoys exploring ideas, tools, and new skills.
+          Instead of waiting for the “perfect moment”, I like to start small,
+          experiment, and improve as I go.
+        </p>
+          <p data-i18n="about_p2">
+          I created this website as my personal space – a place to show what
+          I’m learning, what I’m building, and what I care about.
+        </p>
+          <p data-i18n="about_p3">
             When I’m not in front of a screen, I enjoy spending time with people I love,
             thinking about random ideas, and trying to understand how the world works.
           </p>
@@ -1019,8 +1078,10 @@ nav a,
       <!-- SKILLS -->
      <section id="skills" class="reveal">
         <div class="section-header">
-          <h2 class="section-title">What I’m into</h2>
-          <p class="section-subtitle">Things I’m learning, using, or exploring.</p>
+          <h2 class="section-title" data-i18n="skills_title">What I’m into</h2>
+        <p class="section-subtitle" data-i18n="skills_subtitle">
+          Things I’m learning, using, or exploring.
+        </p>
         </div>
         <div class="pill-grid">
           <span class="skill-pill">HTML & CSS</span>
@@ -1037,8 +1098,12 @@ nav a,
       <!-- PROJECTS -->
       <section id="projects" class="reveal">
         <div class="section-header">
-          <h2 class="section-title">Little experiments & projects</h2>
-          <p class="section-subtitle">A few things I’ve tried or want to try.</p>
+         <h2 class="section-title" data-i18n="projects_title">
+        Little experiments & projects
+      </h2>
+      <p class="section-subtitle" data-i18n="projects_subtitle">
+        A few things I’ve tried or want to try.
+      </p>
         </div>
         <div class="grid">
           <article class="card">
@@ -1082,17 +1147,18 @@ nav a,
       <!-- CONTACT -->
       <section id="contact" class="reveal">
         <div class="section-header">
-          <h2 class="section-title">Let’s connect</h2>
-          <p class="section-subtitle">Login or sign up to see my private contact details.</p>
+          <h2 class="section-title" data-i18n="contact_title">Let’s connect</h2>
+          <p class="section-subtitle" data-i18n="contact_subtitle">
+          Login or sign up to see my private contact details.
+        </p>
         </div>
         <div class="contact-card">
           <div>
-            <p>
-              If you’re here, thank you for taking the time to visit my small space.
-              If you ever want to connect, collaborate, or just talk about ideas,
-              you’re always welcome to reach out.
-            </p>
-
+            <p data-i18n="contact_text">
+            If you’re here, thank you for taking the time to visit my small space.
+            If you ever want to connect, collaborate, or just talk about ideas,
+            you’re always welcome to reach out.
+          </p>
   <!-- Firebase auth, login/signup, verification, reset, show/hide password -->
 <div id="toast"></div>
 <div id="iosHint" style="
@@ -1111,6 +1177,7 @@ nav a,
 ">
   If WhatsApp doesn’t open, tap <b>Open in WhatsApp</b>
 </div>
+<script src="lang.js"></script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
@@ -1236,15 +1303,16 @@ function showSayHi() {
   let greeting = "Hello 👋";
 
   if (isMalayalam) {
-    if (hour >= 5 && hour < 12) greeting = "സുപ്രഭാതം ☀️ സുഖമാണോ?";
-    else if (hour < 17) greeting = "ശുഭ ഉച്ച 🌼 സുഖമാണോ?";
-    else if (hour < 21) greeting = "സന്ധ്യാവന്ദനം 🌆 സുഖമാണോ?";
-    else greeting = "ഹലോ 🌙 സുഖമാണോ?";
-  } else {
-    if (hour >= 5 && hour < 12) greeting = "Good morning ☀️";
-    else if (hour < 17) greeting = "Good afternoon 😊";
-    else greeting = "Good evening 🌆";
-  }
+  if (hour >= 5 && hour < 12) greeting = "സുപ്രഭാതം ☀️ സുഖമാണോ?";
+  else if (hour >= 12 && hour < 17) greeting = "ശുഭ ഉച്ച 🌼 സുഖമാണോ?";
+  else if (hour >= 17 && hour < 21) greeting = "സന്ധ്യാവന്ദനം 🌆 സുഖമാണോ?";
+  else greeting = "ശുഭരാത്രി 🌙";
+} else {
+  if (hour >= 5 && hour < 12) greeting = "Good morning ☀️";
+  else if (hour >= 12 && hour < 17) greeting = "Good afternoon 😊";
+  else if (hour >= 17 && hour < 21) greeting = "Good evening 🌆";
+  else greeting = "Good night 🌙";
+}
 
   // 🔊 Audio + vibration (sync)
   playHiSound();
