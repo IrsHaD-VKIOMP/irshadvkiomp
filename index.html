@@ -989,6 +989,45 @@
       .page {
         padding-bottom: calc(132px + env(safe-area-inset-bottom));
       }
+
+      .hero {
+        grid-template-columns: 1fr;
+        perspective: none;
+      }
+
+      .hero-right {
+        order: -1;
+        transform: none !important;
+        min-height: auto;
+      }
+
+      .hero-left {
+        transform: none !important;
+      }
+
+      .hero-right::after {
+        display: none;
+      }
+
+      .glass-panel,
+      .hero-left,
+      .hero-right,
+      .about-card,
+      .card,
+      .contact-card {
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+      }
+
+      .floating-layer {
+        grid-template-columns: 1fr;
+      }
+
+      .floating-card,
+      .stack-card,
+      .hero-avatar-wrap {
+        transform: none !important;
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
