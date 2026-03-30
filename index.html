@@ -20,7 +20,6 @@
       --bg: #07111f;
       --bg-2: #0c1830;
       --surface: rgba(10, 20, 38, 0.74);
-      --surface-strong: rgba(12, 23, 42, 0.9);
       --surface-soft: rgba(255, 255, 255, 0.06);
       --line: rgba(173, 193, 230, 0.16);
       --text: #eff6ff;
@@ -28,20 +27,15 @@
       --accent: #67e8f9;
       --accent-2: #60a5fa;
       --accent-3: #fb923c;
-      --success: #22c55e;
       --shadow-xl: 0 28px 80px rgba(0, 0, 0, 0.42);
       --shadow-lg: 0 18px 44px rgba(0, 0, 0, 0.28);
       --radius-xl: 30px;
-      --radius-lg: 24px;
-      --radius-md: 18px;
-      --radius-sm: 14px;
     }
 
     body.light {
       --bg: #eef4ff;
       --bg-2: #ffffff;
       --surface: rgba(255, 255, 255, 0.76);
-      --surface-strong: rgba(255, 255, 255, 0.9);
       --surface-soft: rgba(15, 23, 42, 0.04);
       --line: rgba(15, 23, 42, 0.12);
       --text: #0f172a;
@@ -75,11 +69,39 @@
         radial-gradient(circle at 82% 12%, rgba(96, 165, 250, 0.14), transparent 28%),
         radial-gradient(circle at 50% 100%, rgba(251, 146, 60, 0.12), transparent 28%),
         linear-gradient(180deg, var(--bg-2) 0%, var(--bg) 58%, #020617 100%);
+      opacity: 0;
+      transform: translateY(18px) scale(0.99);
       transition:
+        opacity 0.45s ease,
+        transform 0.45s ease,
         background-color 0.3s ease,
         color 0.3s ease,
         border-color 0.3s ease,
         box-shadow 0.3s ease;
+    }
+
+    body.page-ready {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    body.page-leaving {
+      opacity: 0;
+      transform: translateY(-12px) scale(0.985);
+    }
+
+    .page-transition-overlay {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(96, 165, 250, 0.08), rgba(2, 6, 23, 0.96));
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.42s ease;
+      z-index: 99998;
+    }
+
+    body.page-leaving .page-transition-overlay {
+      opacity: 1;
     }
 
     body,
@@ -160,6 +182,7 @@
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       overflow: hidden;
+      border-radius: var(--radius-xl);
     }
 
     .glass-panel::before {
@@ -181,6 +204,7 @@
       gap: 12px;
       padding: 14px;
       border-radius: 24px;
+      margin-bottom: 20px;
     }
 
     .header-left,
@@ -203,6 +227,7 @@
       letter-spacing: 0.08em;
       text-transform: uppercase;
       box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+      color: var(--text);
     }
 
     .time-dot {
@@ -236,6 +261,7 @@
       color: var(--text);
       border-color: var(--line);
       background: var(--surface-soft);
+      transform: translateY(-2px);
     }
 
     .primary-btn,
@@ -279,8 +305,7 @@
     .primary-btn:hover,
     .ghost-btn:hover,
     .social-btn:hover,
-    .floating-card:hover,
-    .stack-card:hover {
+    .floating-card:hover {
       transform: translateY(-2px);
     }
 
@@ -302,7 +327,6 @@
     main {
       display: grid;
       gap: 28px;
-      margin-top: 20px;
     }
 
     .hero {
@@ -312,15 +336,8 @@
     }
 
     .hero-left,
-    .hero-right,
-    .about-card,
-    .card,
-    .contact-card {
-      border-radius: var(--radius-xl);
-    }
-
-    .hero-left,
     .hero-right {
+      border-radius: var(--radius-xl);
       padding: 22px;
     }
 
@@ -387,12 +404,7 @@
     }
 
     .hero-subtitle,
-    .hero-card-body,
-    .about-card,
-    .card p,
-    .section-subtitle,
-    .contact-card p,
-    .stat-label {
+    .hero-card-body {
       color: var(--muted);
     }
 
@@ -413,7 +425,6 @@
     .hero-actions,
     .hero-meta,
     .hero-pill-row,
-    .pill-grid,
     .social-buttons {
       display: flex;
       flex-wrap: wrap;
@@ -494,8 +505,7 @@
       border-radius: 24px;
     }
 
-    .hero-name-block .label,
-    .card-tag {
+    .hero-name-block .label {
       font-size: 0.72rem;
       text-transform: uppercase;
       letter-spacing: 0.1em;
@@ -509,8 +519,7 @@
     }
 
     .hero-tag-chip,
-    .hero-pill,
-    .skill-pill {
+    .hero-pill {
       padding: 8px 11px;
       border-radius: 999px;
       border: 1px solid var(--line);
@@ -552,27 +561,6 @@
       font-weight: 600;
     }
 
-    .stat-row {
-      display: grid;
-      gap: 10px;
-      grid-template-columns: 1fr;
-    }
-
-    .stat {
-      padding: 12px;
-      border-radius: 18px;
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,0.04);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
-    }
-
-    .stat-value {
-      font-size: 0.92rem;
-      font-weight: 700;
-      margin-top: 4px;
-      color: var(--text);
-    }
-
     .hero-floating-badge {
       padding: 12px 14px;
       border-radius: 20px;
@@ -585,120 +573,12 @@
       color: var(--text);
     }
 
-    section {
-      scroll-margin-top: 100px;
-    }
-
-    .section-shell {
-      display: grid;
-      gap: 14px;
-    }
-
-    .section-header {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      padding-inline: 4px;
-    }
-
-    .section-title {
-      font-size: 1.2rem;
-      letter-spacing: 0.02em;
-    }
-
-    .about-card,
-    .contact-card,
-    .card {
-      padding: 20px;
-    }
-
-    .about-card p + p {
-      margin-top: 10px;
-    }
-
-    .grid {
-      display: grid;
-      gap: 14px;
-      grid-template-columns: 1fr;
-    }
-
-    .stack-card {
-      position: relative;
-    }
-
-    .stack-card::after {
-      content: "";
-      position: absolute;
-      inset: auto 14px -10px 14px;
-      height: 20px;
-      border-radius: 20px;
-      background: linear-gradient(90deg, rgba(96,165,250,0.14), rgba(251,146,60,0.12));
-      filter: blur(14px);
-      z-index: -1;
-    }
-
-    .card-title {
-      font-size: 1rem;
-      margin-bottom: 6px;
-    }
-
-    .card-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      margin-top: 12px;
-      font-size: 0.8rem;
-      color: var(--muted);
-    }
-
-    .card-footer a {
-      text-decoration: none;
-      color: var(--accent-2);
-    }
-
-    .contact-card {
-      display: grid;
-      gap: 16px;
-    }
-
-    .contact-fields {
-      display: grid;
-      gap: 10px;
-    }
-
-    .input {
-      width: 100%;
-      border-radius: 16px;
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,0.06);
-      color: var(--text);
-      padding: 12px 14px;
-      outline: none;
-      font-size: 0.92rem;
-      appearance: none;
-      -webkit-appearance: none;
-    }
-
-    .input::placeholder {
-      color: rgba(159,176,202,0.82);
-    }
-
-    .input:focus {
-      border-color: rgba(96,165,250,0.66);
-      box-shadow: 0 0 0 3px rgba(96,165,250,0.18);
-    }
-
     footer {
       padding: 8px 10px 0;
       text-align: center;
       color: var(--muted);
       font-size: 0.8rem;
-    }
-
-    footer a {
-      color: var(--accent-2);
-      text-decoration: none;
+      margin-top: 14px;
     }
 
     #toast {
@@ -739,17 +619,6 @@
       }
     }
 
-    .reveal {
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
-    }
-
-    .reveal.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
     button.loading {
       pointer-events: none;
       opacity: 0.78;
@@ -774,23 +643,6 @@
       }
       100% {
         transform: scale(1);
-      }
-    }
-
-    .glow-ripple {
-      position: absolute;
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: rgba(96,165,250,0.35);
-      animation: ripple 0.7s ease-out forwards;
-      pointer-events: none;
-    }
-
-    @keyframes ripple {
-      to {
-        transform: scale(18);
-        opacity: 0;
       }
     }
 
@@ -937,19 +789,6 @@
         width: auto;
       }
 
-      .stat-row {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-
-      .grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-
-      .contact-card {
-        grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
-        align-items: start;
-      }
-
       .floating-layer {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
@@ -1011,10 +850,7 @@
 
       .glass-panel,
       .hero-left,
-      .hero-right,
-      .about-card,
-      .card,
-      .contact-card {
+      .hero-right {
         backdrop-filter: blur(12px);
         -webkit-backdrop-filter: blur(12px);
       }
@@ -1024,7 +860,6 @@
       }
 
       .floating-card,
-      .stack-card,
       .hero-avatar-wrap {
         transform: none !important;
       }
@@ -1037,6 +872,42 @@
         scroll-behavior: auto !important;
       }
     }
+    @media (max-width: 640px) {
+  nav {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  nav a,
+  nav button {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+    margin: 0;
+  }
+
+  nav a:not(.primary-btn) {
+    min-height: 42px;
+  }
+
+  #login-btn {
+    display: inline-flex !important;
+    grid-column: 1 / -1;
+    order: 5;
+  }
+
+  #sayHiBtn {
+    grid-column: 1 / -1;
+    order: 6;
+  }
+
+  .header-actions {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+}
   </style>
 </head>
 <body>
@@ -1075,15 +946,15 @@
       </div>
 
       <nav>
-        <a href="#about">About</a>
-        <a href="#skills">Skills</a>
-        <a href="#projects">Work</a>
-        <a href="#contact">Contact</a>
-        <a href="auth.html" class="primary-btn" id="login-btn">Login / Sign up 🔐</a>
-        <button type="button" class="primary-btn" id="sayHiBtn" onclick="showSayHi()">
-          Say Hi <span class="icon">👋</span>
-        </button>
-      </nav>
+  <a href="about.html">About</a>
+  <a href="skills.html">Skills</a>
+  <a href="work.html">Work</a>
+  <a href="contact.html">Contact</a>
+  <a href="auth.html" class="primary-btn" id="login-btn">Login / Sign up 🔐</a>
+  <button type="button" class="primary-btn" id="sayHiBtn" onclick="showSayHi()">
+    Say Hi <span class="icon">👋</span>
+  </button>
+</nav>
     </header>
 
     <main>
@@ -1104,8 +975,8 @@
             <p id="welcomeMessage" class="hero-subtitle"></p>
 
             <div class="hero-actions">
-              <a href="#projects" class="primary-btn" data-i18n="hero_btn_work">View my work 🚀</a>
-              <a href="#about" class="ghost-btn" data-i18n="hero_btn_about">More about me ➜</a>
+              <a href="work.html" class="primary-btn" data-i18n="hero_btn_work">View my work 🚀</a>
+              <a href="about.html" class="ghost-btn" data-i18n="hero_btn_about">More about me ➜</a>
             </div>
 
             <div class="hero-meta">
@@ -1181,133 +1052,6 @@
           </div>
         </aside>
       </section>
-
-      <section id="about" class="reveal section-shell">
-        <div class="section-header">
-          <h2 class="section-title" data-i18n="about_title">About me</h2>
-          <p class="section-subtitle" data-i18n="about_subtitle">
-            A quick snapshot of who I am.
-          </p>
-        </div>
-
-        <div class="about-card glass-panel">
-          <p data-i18n="about_p1">
-            I’m someone who enjoys exploring ideas, tools, and new skills.
-            Instead of waiting for the “perfect moment”, I like to start small,
-            experiment, and improve as I go.
-          </p>
-          <p data-i18n="about_p2">
-            I created this website as my personal space – a place to show what
-            I’m learning, what I’m building, and what I care about.
-          </p>
-          <p data-i18n="about_p3">
-            When I’m not in front of a screen, I enjoy spending time with people I love,
-            thinking about random ideas, and trying to understand how the world works.
-          </p>
-        </div>
-      </section>
-
-      <section id="skills" class="reveal section-shell">
-        <div class="section-header">
-          <h2 class="section-title" data-i18n="skills_title">What I’m into</h2>
-          <p class="section-subtitle" data-i18n="skills_subtitle">
-            Things I’m learning, using, or exploring.
-          </p>
-        </div>
-
-        <div class="pill-grid">
-          <span class="skill-pill">HTML & CSS</span>
-          <span class="skill-pill">JavaScript basics</span>
-          <span class="skill-pill">Web design ideas</span>
-          <span class="skill-pill">Tech & gadgets</span>
-          <span class="skill-pill">Photo / video editing</span>
-          <span class="skill-pill">Learning from YouTube</span>
-          <span class="skill-pill">Problem solving</span>
-          <span class="skill-pill">Helping others</span>
-        </div>
-      </section>
-
-      <section id="projects" class="reveal section-shell">
-        <div class="section-header">
-          <h2 class="section-title" data-i18n="projects_title">
-            Little experiments & projects
-          </h2>
-          <p class="section-subtitle" data-i18n="projects_subtitle">
-            A few things I’ve tried or want to try.
-          </p>
-        </div>
-
-        <div class="grid">
-          <article class="card glass-panel stack-card">
-            <div class="card-tag">Web</div>
-            <h3 class="card-title">My personal site</h3>
-            <p>
-              This very page – designed and written by me.
-              A small step into the world of web development and creativity.
-            </p>
-            <div class="card-footer">
-              <span>Built with HTML & CSS</span>
-            </div>
-          </article>
-
-          <article class="card glass-panel stack-card">
-            <div class="card-tag">Idea</div>
-            <h3 class="card-title">Future blog / notes</h3>
-            <p>
-              A place where I might share my thoughts, lessons I learn,
-              and random ideas that I don’t want to forget.
-            </p>
-            <div class="card-footer">
-              <span>Coming soon</span>
-            </div>
-          </article>
-
-          <article class="card glass-panel stack-card">
-            <div class="card-tag">Creative</div>
-            <h3 class="card-title">Music / content</h3>
-            <p>
-              I’d love to upload some of my favourite edits, playlists, or content
-              that I create as I explore more tools.
-            </p>
-            <div class="card-footer">
-              <span>Work in progress</span>
-            </div>
-          </article>
-        </div>
-      </section>
-
-      <section id="contact" class="reveal section-shell">
-        <div class="section-header">
-          <h2 class="section-title" data-i18n="contact_title">Let’s connect</h2>
-          <p class="section-subtitle" data-i18n="contact_subtitle">
-            Login or sign up to see my private contact details.
-          </p>
-        </div>
-
-        <div class="contact-card glass-panel">
-          <div>
-            <p data-i18n="contact_text">
-              If you’re here, thank you for taking the time to visit my small space.
-              If you ever want to connect, collaborate, or just talk about ideas,
-              you’re always welcome to reach out.
-            </p>
-
-            <div class="social-buttons">
-              <a href="auth.html" class="social-btn">
-                <span class="icon">🔐</span>
-                <span>Login / Sign up</span>
-              </a>
-              <button type="button" class="ghost-btn" onclick="showSayHi()">Say Hi 👋</button>
-            </div>
-          </div>
-
-          <div class="contact-fields">
-            <input class="input" type="text" placeholder="Your name">
-            <input class="input" type="email" placeholder="Your email">
-            <textarea class="input" rows="4" placeholder="Your message"></textarea>
-          </div>
-        </div>
-      </section>
     </main>
 
     <footer>
@@ -1335,25 +1079,26 @@
   </div>
 
   <div class="mobile-dock">
-    <a class="dock-link" href="#about">
+    <a class="dock-link" href="about.html">
       <span class="dock-icon">👤</span>
       <span>About</span>
     </a>
-    <a class="dock-link" href="#skills">
+    <a class="dock-link" href="skills.html">
       <span class="dock-icon">🧠</span>
       <span>Skills</span>
     </a>
-    <a class="dock-link" href="#projects">
+    <a class="dock-link" href="work.html">
       <span class="dock-icon">🚀</span>
       <span>Work</span>
     </a>
-    <a class="dock-link" href="#contact">
+    <a class="dock-link" href="contact.html">
       <span class="dock-icon">💬</span>
       <span>Contact</span>
     </a>
   </div>
 
   <script src="lang.js"></script>
+  <script src="page-transition.js"></script>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -1382,13 +1127,7 @@
     }
 
     onAuthStateChanged(auth, user => {
-      const contacts = document.getElementById("protected-contacts");
       const loginBtn = document.getElementById("login-btn");
-
-      if (contacts) {
-        contacts.style.display = user && user.emailVerified ? "flex" : "none";
-      }
-
       if (loginBtn) {
         loginBtn.style.display = user && user.emailVerified ? "none" : "inline-flex";
       }
@@ -1444,18 +1183,6 @@
   </script>
 
   <script>
-    const WHATSAPP_COOLDOWN_MINUTES = 30;
-
-    function canSendWhatsApp() {
-      return true;
-    }
-
-    function remainingTime() {
-      return 0;
-    }
-  </script>
-
-  <script>
     if (typeof isIOSInstagram === "function" && isIOSInstagram()) {
       const hint = document.getElementById("iosHint");
       if (hint) {
@@ -1472,12 +1199,6 @@
       const btn = document.getElementById("sayHiBtn");
       if (!btn || btn.classList.contains("loading")) return;
       btn.classList.add("loading");
-
-      if (window.PFAnalytics) {
-        try {
-          PFAnalytics.trackButton("sayHi");
-        } catch (e) {}
-      }
 
       const hour = new Date().getHours();
       const lang = navigator.language || "en";
@@ -1513,12 +1234,6 @@
       const url = isMobile
         ? `https://wa.me/${phone}?text=${message}`
         : `https://web.whatsapp.com/send?phone=${phone}&text=${message}`;
-
-      if (window.PFAnalytics) {
-        try {
-          PFAnalytics.trackButton("whatsapp");
-        } catch (e) {}
-      }
 
       window.location.href = url;
 
@@ -1568,40 +1283,6 @@
   </script>
 
   <script>
-    const reveals = document.querySelectorAll(".reveal");
-
-    const observer = new IntersectionObserver(
-      entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("show");
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.15 }
-    );
-
-    reveals.forEach(el => observer.observe(el));
-  </script>
-
-  <script>
-    function typeText(text, targetId, speed = 40) {
-      const el = document.getElementById(targetId);
-      if (!el) return;
-
-      el.textContent = "";
-      let i = 0;
-
-      const interval = setInterval(() => {
-        el.textContent += text.charAt(i);
-        i++;
-        if (i >= text.length) clearInterval(interval);
-      }, speed);
-    }
-  </script>
-
-  <script>
     (function welcomeBack() {
       const el = document.getElementById("welcomeMessage");
       if (!el) return;
@@ -1627,6 +1308,44 @@
 
       localStorage.setItem("lastVisit", now);
     })();
+  </script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      document.body.classList.add("page-ready");
+
+      const overlay = document.createElement("div");
+      overlay.className = "page-transition-overlay";
+      document.body.appendChild(overlay);
+
+      document.querySelectorAll("a[href]").forEach(link => {
+        const href = link.getAttribute("href");
+
+        if (
+          !href ||
+          href.startsWith("#") ||
+          href.startsWith("mailto:") ||
+          href.startsWith("tel:") ||
+          href.startsWith("javascript:") ||
+          link.target === "_blank" ||
+          link.hasAttribute("download")
+        ) {
+          return;
+        }
+
+        link.addEventListener("click", e => {
+          const url = new URL(link.href, window.location.href);
+          if (url.origin !== window.location.origin) return;
+
+          e.preventDefault();
+          document.body.classList.add("page-leaving");
+
+          setTimeout(() => {
+            window.location.href = url.href;
+          }, 420);
+        });
+      });
+    });
   </script>
 
   <script src="analytics.js"></script>
