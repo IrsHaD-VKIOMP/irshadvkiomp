@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><title>Contact | Mohammed Irshad VK</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <link rel="stylesheet" href="site.css">
+</head>
+<body>
+  <div class="menu-overlay" id="menuOverlay"></div>
+  <aside class="menu-panel" id="menuPanel"><div class="menu-top"><div class="menu-title">Menu</div><button type="button" class="ghost-btn" id="menuClose">✕</button></div><div class="menu-links"><a href="index.html" class="mobile-link" data-menu-link><span>Home</span></a><a href="about.html" class="mobile-link" data-menu-link><span>About</span></a><a href="skills.html" class="mobile-link" data-menu-link><span>Skills</span></a><a href="work.html" class="mobile-link" data-menu-link><span>Work</span></a><a href="auth.html" class="mobile-link"><span>Login / Sign up 🔐</span></a></div></aside>
+  <div class="bg-orbit"></div><div class="bg-grid"></div><div class="bg-fog"></div>
+  <div class="page">
+    <header class="site-header panel">
+      <div class="logo"><span class="time-dot"></span><span id="live-time">--:--:--</span></div>
+      <nav class="desktop-nav"><a class="nav-link" href="index.html">Home</a><a class="nav-link" href="about.html">About</a><a class="nav-link" href="skills.html">Skills</a><a class="nav-link" href="work.html">Work</a><a href="auth.html" class="primary-btn">Login / Sign up 🔐</a></nav>
+      <div class="header-actions"><button id="themeToggle" class="ghost-btn" type="button">🌙</button><button id="langToggle" class="ghost-btn lang-btn" type="button">🌐 ML</button><button type="button" class="ghost-btn" id="menuToggle"><span class="menu-icon"><span></span><span></span><span></span></span></button></div>
+    </header>
+    <main>
+      <section class="panel content-stack" style="padding:28px">
+        <h1 class="page-title"><span class="accent" data-i18n="contact_title">Let’s connect</span></h1>
+        <p class="page-subtitle" data-i18n="contact_subtitle">Login or sign up to see my private contact details.</p>
+        <div class="contact-card">
+          <div class="content-stack">
+            <p data-i18n="contact_text">If you’re here, thank you for taking the time to visit my small space. If you ever want to connect, collaborate, or just talk about ideas, you’re always welcome to reach out.</p>
+            <div class="social-buttons">
+              <a href="auth.html" class="primary-btn">Login / Sign up 🔐</a>
+              <button type="button" class="ghost-btn" onclick="showSayHi()">Say Hi 👋</button>
+            </div>
+          </div>
+          <div class="contact-fields">
+            <input class="input" type="text" placeholder="Your name">
+            <input class="input" type="email" placeholder="Your email">
+            <textarea class="input" rows="4" placeholder="Your message"></textarea>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script src="lang.js"></script><script src="site.js"></script><script src="page-transition.js"></script><script src="sayhi-ui.js"></script>
+  <script>
+    let audioCtx;function vibrateHi(){if("vibrate" in navigator){navigator.vibrate([60,30,120])}}function playHiSound(){if(!audioCtx){audioCtx=new (window.AudioContext||window.webkitAudioContext)()}if(audioCtx.state==="suspended"){audioCtx.resume()}const osc=audioCtx.createOscillator();const gain=audioCtx.createGain();osc.type="sine";osc.frequency.value=660;gain.gain.setValueAtTime(.15,audioCtx.currentTime);gain.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+.35);osc.connect(gain);gain.connect(audioCtx.destination);osc.start();osc.stop(audioCtx.currentTime+.35)}
+    function showSayHi(){const hour=new Date().getHours();const lang=navigator.language||"en";const isMalayalam=lang.startsWith("ml");let greeting="Hello 👋";if(isMalayalam){if(hour>=5&&hour<12)greeting="സുപ്രഭാതം ☀️ സുഖമാണോ?";else if(hour>=12&&hour<17)greeting="ശുഭ ഉച്ച 🌼 സുഖമാണോ?";else if(hour>=17&&hour<21)greeting="സന്ധ്യാവന്ദനം 🌆 സുഖമാണോ?";else greeting="ശുഭരാത്രി 🌙"}else{if(hour>=5&&hour<12)greeting="Good morning ☀️";else if(hour>=12&&hour<17)greeting="Good afternoon 😊";else if(hour>=17&&hour<21)greeting="Good evening 🌆";else greeting="Good night 🌙"}playHiSound();vibrateHi();const allowed=window.showSayHiUI?window.showSayHiUI(greeting):true;if(!allowed)return;const message=encodeURIComponent(`${greeting} Irshad 👋 I just visited your website!`);const phone="919847355952";const isMobile=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);window.location.href=isMobile?`https://wa.me/${phone}?text=${message}`:`https://web.whatsapp.com/send?phone=${phone}&text=${message}`}
+  </script>
+</body>
+</html>
