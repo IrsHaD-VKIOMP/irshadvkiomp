@@ -608,17 +608,21 @@
     #toast.error { background: #dc2626; }
 
     .fade-up {
-      opacity: 0;
-      transform: translateY(20px);
-      animation: fadeUp 0.8s ease forwards;
-    }
+  opacity: 1;
+  transform: none;
+  animation: fadeUp 0.8s ease;
+}
 
-    @keyframes fadeUp {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
     button.loading {
       pointer-events: none;
@@ -975,6 +979,20 @@
 
   footer {
     margin-top: 8px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+
+  .fade-up,
+  .reveal,
+  .reveal.show {
+    opacity: 1 !important;
+    transform: none !important;
   }
 }
   </style>
