@@ -1,314 +1,435 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>My Links</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8">
+  <title>My Links</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
-<!-- Icons -->
-<link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 
-<style>
-:root {
-  --glass: rgba(255,255,255,0.08);
-  --border: rgba(255,255,255,0.15);
-  --glow: 0 0 25px rgba(124,58,237,0.5);
-}
+  <style>
+    :root {
+      --bg: #07111f;
+      --bg-2: #0c1830;
+      --surface: rgba(10, 20, 38, 0.72);
+      --surface-soft: rgba(255, 255, 255, 0.06);
+      --line: rgba(173, 193, 230, 0.16);
+      --text: #eff6ff;
+      --muted: #9fb0ca;
+      --accent: #67e8f9;
+      --accent-2: #60a5fa;
+      --accent-3: #fb923c;
+      --success: #22c55e;
+      --shadow-xl: 0 28px 80px rgba(0, 0, 0, 0.42);
+      --shadow-lg: 0 18px 44px rgba(0, 0, 0, 0.28);
+      --radius-xl: 30px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+    }
 
-/* 🌈 Animated Background */
-body {
-  margin: 0;
-  min-height: 100vh;              /* ✅ allow page to grow */
-  background: linear-gradient(-45deg,#020617,#1e1b4b,#312e81,#020617);
-  background-size: 400% 400%;
-  animation: bg 15s ease infinite;
-  font-family: system-ui, sans-serif;
-  color: #fff;
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-  display: flex;
-  justify-content: center;        /* ✅ horizontal center only */
-  align-items: flex-start;        /* ✅ start from top */
+    body {
+      min-height: 100vh;
+      font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 15% 12%, rgba(103, 232, 249, 0.16), transparent 22%),
+        radial-gradient(circle at 84% 10%, rgba(96, 165, 250, 0.14), transparent 24%),
+        radial-gradient(circle at 50% 100%, rgba(251, 146, 60, 0.12), transparent 26%),
+        linear-gradient(180deg, var(--bg-2) 0%, var(--bg) 58%, #020617 100%);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 28px 16px 40px;
+      overflow-y: auto;
+      line-height: 1.5;
+    }
 
-  padding: 40px 16px;             /* ✅ space for image */
-  overflow-y: auto;               /* ✅ enable scrolling */
-}
+    .bg-orbit {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+      background:
+        radial-gradient(circle at 22% 30%, rgba(103, 232, 249, 0.12), transparent 22%),
+        radial-gradient(circle at 80% 24%, rgba(96, 165, 250, 0.1), transparent 20%);
+      animation: drift 20s ease-in-out infinite alternate;
+    }
 
-/* 🧊 Card */
-.card {
-  width: 100%;
-  max-width: 380px;
-  padding: 24px;
-  border-radius: 18px;
-  background: var(--glass);
-  backdrop-filter: blur(18px);
-  border: 1px solid var(--border);
-  box-shadow: var(--glow);
-  animation: fadeUp .7s ease;
-  margin-top: 20px;
-}
+    @keyframes drift {
+      0% { transform: translate3d(0, 0, 0) scale(1); }
+      100% { transform: translate3d(14px, -10px, 0) scale(1.04); }
+    }
 
-@keyframes fadeUp {
-  from { opacity:0; transform:translateY(20px) }
-  to { opacity:1; transform:translateY(0) }
-}
+    .shell {
+      width: 100%;
+      max-width: 420px;
+      display: grid;
+      gap: 14px;
+    }
 
-h2 {
-  text-align: center;
-  margin-bottom: 20px;
-}
+    .admin-btn {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 48px;
+      margin: 0 auto;
+      padding: 12px 18px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+      box-shadow: 0 14px 30px rgba(79, 70, 229, 0.3);
+      width: 100%;
+      border: 1px solid rgba(255,255,255,0.12);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
 
-/* 🔘 Buttons */
-.link {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  padding: 14px;
-  margin-bottom: 14px;
-  border-radius: 14px;
-  font-weight: 600;
-  text-decoration: none;
-  color: #fff;
-  position: relative;
-  overflow: hidden;
-  transition: transform .2s ease;
-}
+    .admin-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 34px rgba(79, 70, 229, 0.38);
+    }
 
-.link::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  opacity: .85;
-  z-index: -1;
-}
+    .card {
+      position: relative;
+      width: 100%;
+      padding: 24px 18px 18px;
+      border-radius: var(--radius-xl);
+      background:
+        linear-gradient(160deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02)),
+        var(--surface);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow-xl);
+      overflow: hidden;
+      animation: fadeUp 0.7s ease;
+    }
 
-/* Individual Colors */
-.whatsapp::before { background: linear-gradient(135deg,#25d366,#128c7e); }
-.snapchat::before { background: linear-gradient(135deg,#fffc00,#ffcc00); color:#000 }
-.instagram::before { background: linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045); }
-.email::before { background: linear-gradient(135deg,#3b82f6,#1e40af); }
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.08), transparent 38%);
+      pointer-events: none;
+    }
 
-.link:hover {
-  transform: scale(1.05);
-}
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-/* Logout */
-.logout {
-  margin-top: 18px;
-  background: transparent;
-  border: 1px solid var(--border);
-  padding: 12px;
-  width: 100%;
-  border-radius: 12px;
-  color: #94a3b8;
-  cursor: pointer;
-}
+    .profile {
+      text-align: center;
+      margin-bottom: 18px;
+      position: relative;
+      z-index: 1;
+    }
 
-.logout:hover {
-  background: rgba(255,255,255,0.1);
-}
-.profile {
-  text-align: center;
-  margin-bottom: 14px;
-}
-.profile img {
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-  border: 3px solid rgba(255,255,255,0.2);
-}
-.profile h1 {
-  margin: 10px 0 4px;
-  font-size: 1.3rem;
-}
-.profile p {
-  color: #94a3b8;
-  font-size: 0.85rem;
-}
-.link {
-  position: relative;
-  overflow: hidden;
-}
-.ripple {
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  background: rgba(255,255,255,0.6);
-  border-radius: 50%;
-  transform: scale(0);
-  animation: ripple 0.6s ease-out;
-}
-@keyframes ripple {
-  to {
-    transform: scale(15);
-    opacity: 0;
-  }
-}
-.featured {
-  box-shadow: 0 0 25px rgba(37,211,102,0.6);
-  transform: scale(1.03);
-}
-footer {
-  text-align: center;
-  margin-top: 14px;
-  color: #64748b;
-  font-size: 0.75rem;
-}
-.sharechat::before {
-  background: linear-gradient(135deg,#ff6f00,#ff8f00);
-}
+    .avatar-wrap {
+      width: 102px;
+      height: 102px;
+      margin: 0 auto 12px;
+      padding: 4px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, rgba(103,232,249,0.7), rgba(96,165,250,0.44), rgba(251,146,60,0.34));
+      box-shadow: 0 18px 36px rgba(0,0,0,0.24);
+    }
 
-.x::before {
-  background: linear-gradient(135deg,#000,#333);
-}
+    .profile img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.16);
+      background: #0f172a;
+      display: block;
+    }
 
-.facebook::before {
-  background: linear-gradient(135deg,#1877f2,#145dbf);
-}
+    .profile h1 {
+      margin: 10px 0 4px;
+      font-size: 1.32rem;
+      letter-spacing: 0.01em;
+    }
 
-.discord::before {
-  background: linear-gradient(135deg,#5865F2,#404EED);
-}
+    .profile p {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
 
-.telegram::before {
-  background: linear-gradient(135deg,#229ED9,#1c7fb5);
-}
+    h2 {
+      text-align: center;
+      margin-bottom: 18px;
+      font-size: 1.12rem;
+      position: relative;
+      z-index: 1;
+    }
 
-.threads::before {
-  background: linear-gradient(135deg,#000,#444);
-}
-.admin-btn {
-  display: none;
-  margin: 16px auto;
-  padding: 14px 18px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, #4f46e5, #7c3aed);
-  color: white;
-  text-decoration: none;
-  font-weight: 600;
-  text-align: center;
-  max-width: 260px;
-}
-</style>
+    .links {
+      display: grid;
+      gap: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      min-height: 54px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      font-weight: 700;
+      text-decoration: none;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.12);
+      transition: transform .2s ease, box-shadow .2s ease;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .link::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: .95;
+      z-index: -1;
+    }
+
+    .whatsapp::before { background: linear-gradient(135deg,#25d366,#128c7e); }
+    .snapchat::before { background: linear-gradient(135deg,#fffc00,#ffcc00); }
+    .instagram::before { background: linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045); }
+    .email::before { background: linear-gradient(135deg,#3b82f6,#1e40af); }
+    .sharechat::before { background: linear-gradient(135deg,#ff6f00,#ff8f00); }
+    .x::before { background: linear-gradient(135deg,#000,#333); }
+    .facebook::before { background: linear-gradient(135deg,#1877f2,#145dbf); }
+    .discord::before { background: linear-gradient(135deg,#5865F2,#404EED); }
+    .telegram::before { background: linear-gradient(135deg,#229ED9,#1c7fb5); }
+    .threads::before { background: linear-gradient(135deg,#000,#444); }
+
+    .snapchat {
+      color: #111827;
+    }
+
+    .link:hover {
+      transform: translateY(-2px) scale(1.01);
+    }
+
+    .featured {
+      box-shadow: 0 0 28px rgba(37, 211, 102, 0.45);
+    }
+
+    .link i {
+      font-size: 1.15rem;
+      line-height: 1;
+    }
+
+    .logout {
+      margin-top: 18px;
+      background: transparent;
+      border: 1px solid var(--line);
+      padding: 13px 14px;
+      width: 100%;
+      border-radius: 14px;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 0.92rem;
+      font-weight: 600;
+      position: relative;
+      z-index: 1;
+      transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+    }
+
+    .logout:hover {
+      background: rgba(255,255,255,0.08);
+      color: var(--text);
+      transform: translateY(-1px);
+    }
+
+    .ripple {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: rgba(255,255,255,0.6);
+      border-radius: 50%;
+      transform: scale(0);
+      animation: ripple 0.6s ease-out;
+      pointer-events: none;
+    }
+
+    @keyframes ripple {
+      to {
+        transform: scale(15);
+        opacity: 0;
+      }
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 14px;
+      color: #64748b;
+      font-size: 0.76rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    @media (max-width: 420px) {
+      body {
+        padding-inline: 12px;
+      }
+
+      .card {
+        padding: 22px 14px 16px;
+      }
+
+      .link {
+        font-size: 0.95rem;
+      }
+    }
+  </style>
 </head>
 
 <body>
-<a id="adminBtn" href="admin.html" class="admin-btn">
-  📊 Admin Dashboard
-</a>
-<div class="card">
-  <div class="profile">
-  <img src="photo.jpg" alt="Irshad">
-  <h1>𝗪𝗲𝗹𝗰𝗼𝗺𝗲 🎉</h1>
-  <p id="greeting">Loading…</p>
-</div>
-  <h2>Connect With Me</h2>
+  <div class="bg-orbit"></div>
 
-  <a class="link whatsapp featured" href="https://wa.me/919847355952">
-    <i class="ri-whatsapp-line"></i> WhatsApp
-  </a>
+  <div class="shell">
+    <a id="adminBtn" href="admin.html" class="admin-btn">
+      <span>📊</span>
+      <span>Admin Dashboard</span>
+    </a>
 
-  <a class="link snapchat" href="https://www.snapchat.com/add/vkiomp?share_id=_Tf2SxNzs7g&locale=en-GB">
-    <i class="ri-snapchat-line"></i> Snapchat
-  </a>
+    <div class="card">
+      <div class="profile">
+        <div class="avatar-wrap">
+          <img src="photo.jpg" alt="Irshad" onerror="this.src='profile.jpg'">
+        </div>
+        <h1>𝗪𝗲𝗹𝗰𝗼𝗺𝗲 🎉</h1>
+        <p id="greeting">Loading…</p>
+      </div>
 
-  <a class="link instagram" href="https://www.instagram.com/irshad_vk__omp?igsh=MWR3OXZ3bW5zMjkxeg==">
-    <i class="ri-instagram-line"></i> Instagram
-  </a>
+      <h2>Connect With Me</h2>
 
-  <a class="link email" href="mailto:irshadvkiomp@gmail.com">
-    <i class="ri-mail-line"></i> Email
-  </a>
-<a class="link sharechat" href="https://sharechat.com/profile/vkiomp?d=n">
-  <i class="ri-share-forward-line"></i> ShareChat
-</a>
+      <div class="links">
+        <a class="link whatsapp featured" href="https://wa.me/919847355952">
+          <i class="ri-whatsapp-line"></i> WhatsApp
+        </a>
 
-<a class="link x" href="https://x.com/vkiomp">
-  <i class="ri-twitter-x-line"></i> X (Twitter)
-</a>
+        <a class="link snapchat" href="https://www.snapchat.com/add/vkiomp?share_id=_Tf2SxNzs7g&locale=en-GB">
+          <i class="ri-snapchat-line"></i> Snapchat
+        </a>
 
-<a class="link facebook" href="https://www.facebook.com/share/1Cot1C9aTt/">
-  <i class="ri-facebook-fill"></i> Facebook
-</a>
+        <a class="link instagram" href="https://www.instagram.com/irshad_vk__omp?igsh=MWR3OXZ3bW5zMjkxeg==">
+          <i class="ri-instagram-line"></i> Instagram
+        </a>
 
-<a class="link discord" href="https://discord.gg/y4nnEpvT">
-  <i class="ri-discord-fill"></i> Discord
-</a>
+        <a class="link email" href="mailto:irshadvkiomp@gmail.com">
+          <i class="ri-mail-line"></i> Email
+        </a>
 
-<a class="link telegram" href="t.me/zehranvkomp">
-  <i class="ri-telegram-fill"></i> Telegram
-</a>
+        <a class="link sharechat" href="https://sharechat.com/profile/vkiomp?d=n">
+          <i class="ri-share-forward-line"></i> ShareChat
+        </a>
 
-<a class="link threads" href="https://www.threads.com/@irshad_vk__omp">
-  <i class="ri-threads-line"></i> Threads
-</a>
+        <a class="link x" href="https://x.com/vkiomp">
+          <i class="ri-twitter-x-line"></i> X (Twitter)
+        </a>
 
-  <button type="button" class="logout" onclick="logout()">
-  Logout
-</button>
-<footer>
-  <small>© 2025 Irshad VK • Built with ❤️</small>
-</footer>
-</div>
+        <a class="link facebook" href="https://www.facebook.com/share/1Cot1C9aTt/">
+          <i class="ri-facebook-fill"></i> Facebook
+        </a>
 
-<!-- 🔐 Firebase Auth Guard -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+        <a class="link discord" href="https://discord.gg/y4nnEpvT">
+          <i class="ri-discord-fill"></i> Discord
+        </a>
 
-  const firebaseConfig = {
-  apiKey: "AIzaSyDr3YpouSddKSR-9PqKPHDSP1qfwNv-VBM",
-  authDomain: "irshad-website.firebaseapp.com",
-  projectId: "irshad-website",
-  appId: "1:513828028182:web:ceca5d1ac390d5ec731a37"
-};
-const ADMIN_EMAIL = "irshadvkiomp@gmail.com";
+        <a class="link telegram" href="https://t.me/zehranvkomp">
+          <i class="ri-telegram-fill"></i> Telegram
+        </a>
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
+        <a class="link threads" href="https://www.threads.com/@irshad_vk__omp">
+          <i class="ri-threads-line"></i> Threads
+        </a>
+      </div>
 
- onAuthStateChanged(auth, (user) => {
-  const adminBtn = document.getElementById("adminBtn");
+      <button type="button" class="logout" onclick="logout()">
+        Logout
+      </button>
 
-  // Not logged in → go to auth
-  if (!user) {
-    window.location.replace("auth.html");
-    return;
-  }
+      <footer>
+        <small>© 2025 Irshad VK • Built with ❤️</small>
+      </footer>
+    </div>
+  </div>
 
-  // Logged in + verified + admin email
-  if (user.emailVerified && user.email === ADMIN_EMAIL) {
-    adminBtn.style.display = "block";
-  } else {
-    adminBtn.style.display = "none";
-  }
-});
-const name = "𝐓𝐡𝐚𝐧𝐤𝐬 𝐟𝐨𝐫 𝐣𝐨𝐢𝐧𝐢𝐧𝐠 𝐮𝐬!"; // 👈 change anytime
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-const hour = new Date().getHours();
-const greet =
-  hour < 12 ? "Good Morning ☀️" :
-  hour < 17 ? "Good Afternoon 🌤️" :
-  hour < 21 ? "Good Evening 🌆" :
-  "Good Night 🌙";
+    const firebaseConfig = {
+      apiKey: "AIzaSyDr3YpouSddKSR-9PqKPHDSP1qfwNv-VBM",
+      authDomain: "irshad-website.firebaseapp.com",
+      projectId: "irshad-website",
+      appId: "1:513828028182:web:ceca5d1ac390d5ec731a37"
+    };
 
-const greetEl = document.getElementById("greeting");
-if (greetEl) {
-  greetEl.textContent = `${greet}, ${name} 👋`;
-}
-document.querySelectorAll(".link").forEach(btn => {
-  btn.addEventListener("click", e => {
-    const ripple = document.createElement("span");
-    ripple.className = "ripple";
-    ripple.style.left = e.offsetX + "px";
-    ripple.style.top = e.offsetY + "px";
-    btn.appendChild(ripple);
-    setTimeout(() => ripple.remove(), 600);
-  });
-});
+    const ADMIN_EMAIL = "irshadvkiomp@gmail.com";
 
-  window.logout = () => signOut(auth);
-</script>
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
 
+    onAuthStateChanged(auth, (user) => {
+      const adminBtn = document.getElementById("adminBtn");
+
+      if (!user) {
+        window.location.replace("auth.html");
+        return;
+      }
+
+      if (user.emailVerified && user.email === ADMIN_EMAIL) {
+        adminBtn.style.display = "inline-flex";
+      } else {
+        adminBtn.style.display = "none";
+      }
+    });
+
+    window.logout = () => signOut(auth);
+  </script>
+
+  <script>
+    const name = "𝐓𝐡𝐚𝐧𝐤𝐬 𝐟𝐨𝐫 𝐣𝐨𝐢𝐧𝐢𝐧𝐠 𝐮𝐬!";
+    const hour = new Date().getHours();
+
+    const greet =
+      hour < 12 ? "Good Morning ☀️" :
+      hour < 17 ? "Good Afternoon 🌤️" :
+      hour < 21 ? "Good Evening 🌆" :
+      "Good Night 🌙";
+
+    const greetEl = document.getElementById("greeting");
+    if (greetEl) {
+      greetEl.textContent = `${greet}, ${name} 👋`;
+    }
+
+    document.querySelectorAll(".link").forEach(btn => {
+      btn.addEventListener("click", e => {
+        const ripple = document.createElement("span");
+        ripple.className = "ripple";
+        ripple.style.left = e.offsetX + "px";
+        ripple.style.top = e.offsetY + "px";
+        btn.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 600);
+      });
+    });
+  </script>
 </body>
 </html>
