@@ -3,181 +3,390 @@
 <head>
 <meta charset="UTF-8">
 <title>Auth | irshadvkiomp</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
 <style>
 :root {
   --primary: #7c3aed;
   --secondary: #4f46e5;
+  --accent: #38bdf8;
   --bg: #020617;
-  --card: rgba(15,23,42,0.95);
-  --border: rgba(148,163,184,0.15);
+  --card: rgba(15, 23, 42, 0.88);
+  --border: rgba(148, 163, 184, 0.16);
   --text: #e5e7eb;
   --muted: #94a3b8;
+  --success: #22c55e;
+  --danger: #ef4444;
+  --shadow-xl: 0 30px 60px rgba(0, 0, 0, 0.75);
+  --shadow-lg: 0 18px 40px rgba(0, 0, 0, 0.45);
+  --radius-xl: 24px;
+  --radius-lg: 18px;
+  --radius-md: 14px;
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  min-height: 100%;
+}
 
 body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background:
-    radial-gradient(800px circle at 20% 10%, rgba(124,58,237,0.15), transparent 40%),
-    radial-gradient(800px circle at 80% 90%, rgba(79,70,229,0.12), transparent 40%),
-    var(--bg);
+  display: grid;
+  place-items: center;
+  padding: 18px;
   color: var(--text);
+  background:
+    radial-gradient(900px circle at 15% 10%, rgba(124, 58, 237, 0.18), transparent 38%),
+    radial-gradient(800px circle at 85% 90%, rgba(56, 189, 248, 0.12), transparent 35%),
+    radial-gradient(700px circle at 50% 100%, rgba(79, 70, 229, 0.16), transparent 35%),
+    var(--bg);
+  overflow-x: hidden;
 }
 
-/* CARD */
-.box {
+.bg-orb {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(56, 189, 248, 0.08), transparent 18%),
+    radial-gradient(circle at 78% 26%, rgba(124, 58, 237, 0.12), transparent 22%);
+  animation: drift 18s ease-in-out infinite alternate;
+}
+
+@keyframes drift {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to { transform: translate3d(12px, -14px, 0) scale(1.04); }
+}
+
+.shell {
+  position: relative;
+  z-index: 1;
   width: 100%;
-  max-width: 390px;
-  padding: 30px;
-  border-radius: 18px;
-  background: linear-gradient(180deg, var(--card), rgba(2,6,23,0.95));
-  border: 1px solid var(--border);
-  box-shadow:
-    0 30px 60px rgba(0,0,0,0.8),
-    inset 0 1px 0 rgba(255,255,255,0.05);
-  animation: popIn 0.6s cubic-bezier(0.22,1,0.36,1);
+  max-width: 430px;
 }
 
-/* HEAD */
-h2 {
-  margin-bottom: 6px;
-  font-size: 1.5rem;
-  font-weight: 600;
+.box {
+  position: relative;
+  width: 100%;
+  border-radius: var(--radius-xl);
+  background:
+    linear-gradient(180deg, rgba(15, 23, 42, 0.96), rgba(2, 6, 23, 0.96));
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-xl);
+  overflow: hidden;
+  animation: popIn 0.65s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.sub {
+
+.box::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.08), transparent 36%);
+  pointer-events: none;
+}
+
+.box-inner {
+  position: relative;
+  padding: 28px 24px 24px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  background: rgba(255,255,255,0.04);
   color: var(--muted);
-  font-size: 0.9rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   margin-bottom: 18px;
 }
 
-/* INPUTS */
-input {
-  width: 100%;
-  padding: 14px;
-  margin-top: 12px;
-  border-radius: 12px;
-  background: rgba(2,6,23,0.8);
-  border: 1px solid rgba(148,163,184,0.2);
-  color: #f9fafb;
-  font-size: 0.95rem;
-  outline: none;
-  transition: 0.2s;
+.badge-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--primary));
+  box-shadow: 0 0 18px rgba(56, 189, 248, 0.7);
 }
 
-input::placeholder { color: var(--muted); }
+h2 {
+  margin: 0 0 6px;
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.sub {
+  color: var(--muted);
+  font-size: 0.94rem;
+  margin-bottom: 20px;
+}
+
+.form-stage {
+  position: relative;
+  min-height: 246px;
+}
+
+form {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  transition:
+    opacity 0.38s ease,
+    transform 0.38s ease,
+    visibility 0.38s ease;
+}
+
+form.hidden-left {
+  opacity: 0;
+  transform: translateX(-26px) scale(0.98);
+  pointer-events: none;
+  visibility: hidden;
+}
+
+form.hidden-right {
+  opacity: 0;
+  transform: translateX(26px) scale(0.98);
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.input-wrap {
+  position: relative;
+}
+
+input {
+  width: 100%;
+  padding: 14px 15px;
+  border-radius: var(--radius-md);
+  background: rgba(2, 6, 23, 0.8);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  color: #f9fafb;
+  font-size: 0.96rem;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+input::placeholder {
+  color: var(--muted);
+}
 
 input:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(124,58,237,0.25);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.22);
+  transform: translateY(-1px);
 }
 
-/* BUTTONS */
 button {
   width: 100%;
-  margin-top: 14px;
-  padding: 13px;
-  border-radius: 12px;
+  min-height: 48px;
+  padding: 13px 14px;
+  border-radius: var(--radius-md);
   border: none;
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 0.95rem;
   cursor: pointer;
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
-  color: white;
-  transition: 0.15s;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
 }
 
 button:hover {
   transform: translateY(-1px);
-  box-shadow: 0 10px 25px rgba(124,58,237,0.4);
 }
-button:active { transform: scale(0.97); }
+
+button:active {
+  transform: scale(0.98);
+}
+
+.primary {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: white;
+  box-shadow: 0 14px 28px rgba(124, 58, 237, 0.35);
+}
+
+.primary:hover {
+  box-shadow: 0 18px 30px rgba(124, 58, 237, 0.45);
+}
 
 .secondary {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid #334155;
+  color: #cbd5f5;
+}
+
+.secondary:hover {
+  background: rgba(255,255,255,0.06);
+}
+
+.link {
+  text-align: right;
+  margin-top: -2px;
+  font-size: 0.86rem;
+  color: #a5b4fc;
+  cursor: pointer;
+  width: fit-content;
+  justify-self: end;
+  transition: color 0.18s ease, transform 0.18s ease;
+}
+
+.link:hover {
+  color: #c4b5fd;
+  text-decoration: underline;
+  transform: translateY(-1px);
+}
+
+.switcher {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(148, 163, 184, 0.14);
+  display: grid;
+  gap: 10px;
+}
+
+.switch-text {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+#switchBtn {
   background: transparent;
   border: 1px solid #334155;
   color: #cbd5f5;
 }
-.secondary:hover { background: rgba(255,255,255,0.05); }
 
-.link {
-  text-align: right;
-  margin-top: 6px;
-  font-size: 0.85rem;
-  color: #a5b4fc;
-  cursor: pointer;
-}
-.link:hover { text-decoration: underline; }
-
-/* FORMS */
-form {
-  transition: 0.25s ease;
-}
-form.hidden {
-  opacity: 0;
-  transform: translateY(10px);
-  pointer-events: none;
-  height: 0;
-  overflow: hidden;
+#switchBtn:hover {
+  background: rgba(255,255,255,0.05);
 }
 
-/* TOAST */
 #toast {
   position: fixed;
-  bottom: 20px;
-  right: 20px;
+  right: 18px;
+  bottom: 18px;
+  max-width: min(90vw, 340px);
   background: #0f172a;
-  padding: 12px 18px;
-  border-radius: 12px;
+  color: #fff;
+  padding: 13px 16px;
+  border-radius: 14px;
   box-shadow: 0 20px 40px rgba(0,0,0,0.6);
   opacity: 0;
   transform: translateY(20px);
-  transition: 0.3s;
+  transition: 0.3s ease;
+  z-index: 9999;
+  border: 1px solid rgba(148,163,184,0.14);
 }
+
 #toast.show {
   opacity: 1;
   transform: translateY(0);
 }
 
-/* ANIM */
+.loading {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
 @keyframes popIn {
-  from { opacity: 0; transform: scale(0.95) translateY(20px); }
-  to { opacity: 1; transform: scale(1) translateY(0); }
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@media (max-width: 420px) {
+  .box-inner {
+    padding: 24px 18px 20px;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  .form-stage {
+    min-height: 254px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  form.hidden-left,
+  form.hidden-right {
+    display: none;
+  }
 }
 </style>
 </head>
 
 <body>
+<div class="bg-orb"></div>
 
-<div class="box">
-  <h2 id="title">Login</h2>
-  <div class="sub" id="subtitle">Welcome back 👋</div>
+<div class="shell">
+  <div class="box">
+    <div class="box-inner">
+      <div class="badge">
+        <span class="badge-dot"></span>
+        <span>Secure Access</span>
+      </div>
 
-  <!-- LOGIN -->
-  <form id="loginForm">
-    <input id="loginEmail" type="email" placeholder="Email" required>
-    <input id="loginPassword" type="password" placeholder="Password" required>
-    <div class="link" id="forgotBtn">Forgot password?</div>
-    <button type="submit">Login</button>
+      <h2 id="title">Login</h2>
+      <div class="sub" id="subtitle">Welcome back 👋</div>
 
-  </form>
+      <div class="form-stage">
+        <form id="loginForm">
+          <div class="input-wrap">
+            <input id="loginEmail" type="email" placeholder="Email" required>
+          </div>
 
-  <!-- SIGNUP -->
-  <form id="signupForm" class="hidden">
-    <input id="signupEmail" type="email" placeholder="Email" required>
-    <input id="signupPassword" type="password" placeholder="Password (min 6)" required>
-    <button type="submit">Create account</button>
-    <button type="button" class="secondary" id="resendBtn">Resend verification email</button>
-  </form>
+          <div class="input-wrap">
+            <input id="loginPassword" type="password" placeholder="Password" required>
+          </div>
 
-  <button type="button" class="secondary" id="switchBtn">
-  Go to Sign up
-</button>
+          <div class="link" id="forgotBtn">Forgot password?</div>
+
+          <button type="submit" class="primary" id="loginSubmit">Login</button>
+        </form>
+
+        <form id="signupForm" class="hidden-right">
+          <div class="input-wrap">
+            <input id="signupEmail" type="email" placeholder="Email" required>
+          </div>
+
+          <div class="input-wrap">
+            <input id="signupPassword" type="password" placeholder="Password (min 6)" required>
+          </div>
+
+          <button type="submit" class="primary" id="signupSubmit">Create account</button>
+          <button type="button" class="secondary" id="resendBtn">Resend verification email</button>
+        </form>
+      </div>
+
+      <div class="switcher">
+        <div class="switch-text" id="switchText">New here? Create your account</div>
+        <button type="button" class="secondary" id="switchBtn">Go to Sign up</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div id="toast"></div>
@@ -194,7 +403,6 @@ import {
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-/* 🔥 FIREBASE CONFIG */
 const firebaseConfig = {
   apiKey: "AIzaSyDr3YpouSddKSR-9PqKPHDSP1qfwNv-VBM",
   authDomain: "irshad-website.firebaseapp.com",
@@ -205,94 +413,103 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-/* UI */
 const loginForm = document.getElementById("loginForm");
 const signupForm = document.getElementById("signupForm");
 const switchBtn = document.getElementById("switchBtn");
+const switchText = document.getElementById("switchText");
 const title = document.getElementById("title");
 const subtitle = document.getElementById("subtitle");
 const resendBtn = document.getElementById("resendBtn");
 const forgotBtn = document.getElementById("forgotBtn");
+const loginSubmit = document.getElementById("loginSubmit");
+const signupSubmit = document.getElementById("signupSubmit");
 
 const toastEl = document.getElementById("toast");
 function toast(msg) {
   toastEl.textContent = msg;
   toastEl.classList.add("show");
-  setTimeout(() => toastEl.classList.remove("show"), 3000);
+  setTimeout(() => toastEl.classList.remove("show"), 3200);
 }
-function setLoading(btn, state) {
-  if (state) {
-    btn.disabled = true;
-    btn.style.opacity = "0.6";
-    btn.textContent = "Please wait...";
+
+function setButtonLoading(btn, state, text) {
+  if (!btn) return;
+  btn.disabled = state;
+  btn.classList.toggle("loading", state);
+  btn.textContent = state ? "Please wait..." : text;
+}
+
+let isLoginMode = true;
+
+function updateMode(nextLoginMode) {
+  isLoginMode = nextLoginMode;
+
+  if (isLoginMode) {
+    loginForm.classList.remove("hidden-left", "hidden-right");
+    signupForm.classList.add("hidden-right");
+    title.textContent = "Login";
+    subtitle.textContent = "Welcome back 👋";
+    switchBtn.textContent = "Go to Sign up";
+    switchText.textContent = "New here? Create your account";
   } else {
-    btn.disabled = false;
-    btn.style.opacity = "1";
-    btn.textContent = btn.closest("form").id === "loginForm"
-      ? "Login"
-      : "Create account";
+    signupForm.classList.remove("hidden-left", "hidden-right");
+    loginForm.classList.add("hidden-left");
+    title.textContent = "Create account";
+    subtitle.textContent = "Set up your account and verify your email ✨";
+    switchBtn.textContent = "Back to Login";
+    switchText.textContent = "Already have an account?";
   }
 }
-/* SWITCH */
-switchBtn.onclick = () => {
-  const login = !loginForm.classList.contains("hidden");
-  loginForm.classList.toggle("hidden", login);
-  signupForm.classList.toggle("hidden", !login);
-  title.textContent = login ? "Sign up" : "Login";
-  subtitle.textContent = login ? "Create your account ✨" : "Welcome back 👋";
-  switchBtn.textContent = login ? "Go to Login" : "Go to Sign up";
-};
 
-/* LOGIN */
-loginForm.onsubmit = async e => {
+switchBtn.addEventListener("click", () => {
+  updateMode(!isLoginMode);
+});
+
+loginForm.addEventListener("submit", async e => {
   e.preventDefault();
-  const btn = loginForm.querySelector("button");
-  setLoading(btn, true);
+  setButtonLoading(loginSubmit, true, "Login");
 
   try {
-    const user = await signInWithEmailAndPassword(
-      auth, loginEmail.value, loginPassword.value
-    );
+    const email = document.getElementById("loginEmail").value.trim();
+    const password = document.getElementById("loginPassword").value;
+
+    const user = await signInWithEmailAndPassword(auth, email, password);
 
     if (!user.user.emailVerified) {
       toast("Verify your email first 📩");
       await signOut(auth);
-      setLoading(btn, false);
+      setButtonLoading(loginSubmit, false, "Login");
       return;
     }
 
     toast("Login successful ✅");
-    setTimeout(() => location.href = "links.html", 1200);
-
+    setTimeout(() => {
+      location.href = "links.html";
+    }, 1200);
   } catch (err) {
     toast(err.message);
-    setLoading(btn, false);
+    setButtonLoading(loginSubmit, false, "Login");
   }
-};
+});
 
-/* SIGNUP */
-signupForm.onsubmit = async e => {
+signupForm.addEventListener("submit", async e => {
   e.preventDefault();
-  const btn = signupForm.querySelector("button");
-  setLoading(btn, true);
+  setButtonLoading(signupSubmit, true, "Create account");
 
   try {
-    const user = await createUserWithEmailAndPassword(
-      auth, signupEmail.value, signupPassword.value
-    );
+    const email = document.getElementById("signupEmail").value.trim();
+    const password = document.getElementById("signupPassword").value;
 
+    const user = await createUserWithEmailAndPassword(auth, email, password);
     await sendEmailVerification(user.user);
-    toast("Verification email sent 📩");
-
+    toast("Verification email sent 📩 Check your inbox");
   } catch (err) {
     toast(err.message);
   }
 
-  setLoading(btn, false);
-};
+  setButtonLoading(signupSubmit, false, "Create account");
+});
 
-/* RESEND */
-resendBtn.onclick = async () => {
+resendBtn.addEventListener("click", async () => {
   try {
     const user = auth.currentUser;
 
@@ -308,31 +525,32 @@ resendBtn.onclick = async () => {
 
     await sendEmailVerification(user);
     toast("Verification email re-sent 📩 Check inbox/spam");
-
   } catch (err) {
     toast(err.message);
   }
-};
+});
 
-/* FORGOT PASSWORD */
-forgotBtn.onclick = async () => {
-  if (!loginEmail.value) {
+forgotBtn.addEventListener("click", async () => {
+  const loginEmail = document.getElementById("loginEmail").value.trim();
+
+  if (!loginEmail) {
     toast("Enter your email first");
     return;
   }
+
   try {
-    await sendPasswordResetEmail(auth, loginEmail.value);
+    await sendPasswordResetEmail(auth, loginEmail);
     toast("Password reset email sent 🔐");
   } catch (err) {
     toast(err.message);
   }
+});
 
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, user => {
   if (user && user.emailVerified) {
     location.replace("links.html");
   }
 });
-};
 </script>
 
 </body>
