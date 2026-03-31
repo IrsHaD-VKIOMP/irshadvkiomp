@@ -56,6 +56,7 @@
 
     html {
       scroll-behavior: smooth;
+      min-height: 100%;
     }
 
     body {
@@ -764,6 +765,43 @@
       line-height: 1;
     }
 
+    @media (max-width: 640px) {
+      nav {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      nav a,
+      nav button {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+        margin: 0;
+      }
+
+      nav a:not(.primary-btn) {
+        min-height: 42px;
+      }
+
+      #login-btn {
+        display: inline-flex !important;
+        grid-column: 1 / -1;
+        order: 5;
+      }
+
+      #sayHiBtn {
+        grid-column: 1 / -1;
+        order: 6;
+      }
+
+      .header-actions {
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+    }
+
     @media (min-width: 720px) {
       .page {
         padding-inline: 20px;
@@ -799,6 +837,24 @@
         display: none;
       }
 
+      .page {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        padding-bottom: 40px;
+      }
+
+      main {
+        flex: 1;
+        align-content: start;
+      }
+
+      .hero {
+        min-height: calc(100vh - 180px);
+        align-items: center;
+      }
+
       .hero-left {
         transform: rotateX(2deg) rotateY(1deg);
       }
@@ -822,6 +878,10 @@
       .floating-card:hover {
         transform: translateY(-4px);
       }
+
+      footer {
+        margin-top: 12px;
+      }
     }
 
     @media (max-width: 979px) {
@@ -830,22 +890,26 @@
       }
 
       .hero {
-        grid-template-columns: 1fr;
-        perspective: none;
+        grid-template-columns: 1fr !important;
+        perspective: none !important;
+        align-items: start !important;
+      }
+
+      .hero-left,
+      .hero-right {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        transform: none !important;
       }
 
       .hero-right {
         order: -1;
-        transform: none !important;
-        min-height: auto;
-      }
-
-      .hero-left {
-        transform: none !important;
+        min-height: auto !important;
       }
 
       .hero-right::after {
-        display: none;
+        display: none !important;
       }
 
       .glass-panel,
@@ -855,12 +919,23 @@
         -webkit-backdrop-filter: blur(12px);
       }
 
-      .floating-layer {
-        grid-template-columns: 1fr;
+      .profile-shell,
+      .hero-card-top,
+      .hero-card-body,
+      .hero-pill-row,
+      .floating-layer,
+      .hero-floating-badge {
+        display: grid !important;
+        visibility: visible !important;
+        opacity: 1 !important;
       }
 
-      .floating-card,
-      .hero-avatar-wrap {
+      .floating-layer {
+        grid-template-columns: 1fr !important;
+      }
+
+      .hero-avatar-wrap,
+      .floating-card {
         transform: none !important;
       }
     }
@@ -872,40 +947,34 @@
         scroll-behavior: auto !important;
       }
     }
-    @media (max-width: 640px) {
-  nav {
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
+    @media (min-width: 980px) {
+  html, body {
+    height: 100%;
+    overflow: hidden;
   }
 
-  nav a,
-  nav button {
-    width: 100%;
-    justify-content: center;
-    text-align: center;
-    margin: 0;
+  .page {
+    height: 100vh;
+    padding-bottom: 24px;
   }
 
-  nav a:not(.primary-btn) {
-    min-height: 42px;
+  main {
+    height: calc(100vh - 170px);
   }
 
-  #login-btn {
-    display: inline-flex !important;
-    grid-column: 1 / -1;
-    order: 5;
+  .hero {
+    height: 100%;
+    min-height: 0;
+        align-items: stretch;
   }
 
-  #sayHiBtn {
-    grid-column: 1 / -1;
-    order: 6;
+  .hero-left,
+  .hero-right {
+    height: 100%;
   }
 
-  .header-actions {
-    flex-wrap: wrap;
-    justify-content: flex-end;
+  footer {
+    margin-top: 8px;
   }
 }
   </style>
@@ -946,15 +1015,15 @@
       </div>
 
       <nav>
-  <a href="about.html">About</a>
-  <a href="skills.html">Skills</a>
-  <a href="work.html">Work</a>
-  <a href="contact.html">Contact</a>
-  <a href="auth.html" class="primary-btn" id="login-btn">Login / Sign up 🔐</a>
-  <button type="button" class="primary-btn" id="sayHiBtn" onclick="showSayHi()">
-    Say Hi <span class="icon">👋</span>
-  </button>
-</nav>
+        <a href="about.html">About</a>
+        <a href="skills.html">Skills</a>
+        <a href="work.html">Work</a>
+        <a href="contact.html">Contact</a>
+        <a href="auth.html" class="primary-btn" id="login-btn">Login / Sign up 🔐</a>
+        <button type="button" class="primary-btn" id="sayHiBtn" onclick="showSayHi()">
+          Say Hi <span class="icon">👋</span>
+        </button>
+      </nav>
     </header>
 
     <main>
@@ -999,8 +1068,7 @@
               <div class="hero-identity">
                 <div class="hero-avatar-wrap">
                   <div class="hero-avatar">
-                    <img src="profile.jpg" alt="Profile"
-                         onerror="this.style.display='none'; this.parentElement.innerHTML='🧑‍💻';">
+                    <img src="profile.jpg" alt="Profile" onerror="this.style.display='none'; this.parentElement.innerHTML='🧑‍💻';">
                   </div>
                 </div>
 
@@ -1098,7 +1166,6 @@
   </div>
 
   <script src="lang.js"></script>
-  <script src="page-transition.js"></script>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -1114,18 +1181,6 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    function setLoading(btn, state) {
-      if (!btn) return;
-      if (state) {
-        btn.classList.add("loading");
-        btn.dataset.text = btn.textContent;
-        btn.textContent = "Please wait";
-      } else {
-        btn.classList.remove("loading");
-        btn.textContent = btn.dataset.text || btn.textContent;
-      }
-    }
-
     onAuthStateChanged(auth, user => {
       const loginBtn = document.getElementById("login-btn");
       if (loginBtn) {
@@ -1137,8 +1192,6 @@
       await signOut(auth);
       location.reload();
     };
-
-    window.setLoading = setLoading;
   </script>
 
   <script>
@@ -1312,11 +1365,15 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
+      document.body.classList.remove("page-leaving");
       document.body.classList.add("page-ready");
 
-      const overlay = document.createElement("div");
-      overlay.className = "page-transition-overlay";
-      document.body.appendChild(overlay);
+      let overlay = document.querySelector(".page-transition-overlay");
+      if (!overlay) {
+        overlay = document.createElement("div");
+        overlay.className = "page-transition-overlay";
+        document.body.appendChild(overlay);
+      }
 
       document.querySelectorAll("a[href]").forEach(link => {
         const href = link.getAttribute("href");
@@ -1338,6 +1395,7 @@
           if (url.origin !== window.location.origin) return;
 
           e.preventDefault();
+          document.body.classList.remove("page-ready");
           document.body.classList.add("page-leaving");
 
           setTimeout(() => {
@@ -1346,12 +1404,17 @@
         });
       });
     });
+
+    window.addEventListener("pageshow", () => {
+      document.body.classList.remove("page-leaving");
+      document.body.classList.add("page-ready");
+    });
   </script>
 
   <script src="analytics.js"></script>
 
   <script>
-    if ("serviceWorker" in navigator) {
+    if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
       window.addEventListener("load", () => {
         navigator.serviceWorker.register("./sw.js");
       });
